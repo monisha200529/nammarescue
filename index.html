@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NammaRescue – Community Disaster Management Platform</title>
+<meta name="description" content="Community-led disaster response, emergency assistance, volunteer dispatch, shelter discovery, and offline incident reporting in English and Tamil.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B2545;--navy-2:#13315C;--teal:#12A5A0;--teal-ink:#0A6F6C;
+  --bg:#F1F4F8;--surface:#FFFFFF;--surface-2:#F6F8FB;--text:#0F1F36;--muted:#586A82;--line:#DAE2EC;
+  --btn:#0A6F6C;--btn-h:#08595A;--btn-t:#FFFFFF;--head-bg:#0B2545;
+  --danger:#B8243A;--danger-bg:#FCE9EC;--warn:#8F5600;--warn-bg:#FFF1D9;--ok:#14733A;--ok-bg:#E3F5EA;--info:#1A5FA6;--info-bg:#E4F0FB;
+  --shadow:0 1px 2px rgba(11,37,69,.06),0 10px 26px -10px rgba(11,37,69,.16);
+  --r:16px;--r-s:10px;color-scheme:light;
+  box-sizing:border-box;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#08111F;--surface:#0F203A;--surface-2:#132846;--text:#E7EEF7;--muted:#9DB0C8;--line:#233B5E;
+    --btn:#2BC4BE;--btn-h:#4AD6D0;--btn-t:#06223A;--teal-ink:#4FD8D2;--head-bg:#061326;
+    --danger:#FF8A96;--danger-bg:#3A1823;--warn:#F5B94D;--warn-bg:#382A0E;--ok:#6FD79A;--ok-bg:#12301F;--info:#7FB8F0;--info-bg:#132F4D;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px -10px rgba(0,0,0,.5);color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08111F;--surface:#0F203A;--surface-2:#132846;--text:#E7EEF7;--muted:#9DB0C8;--line:#233B5E;
+  --btn:#2BC4BE;--btn-h:#4AD6D0;--btn-t:#06223A;--teal-ink:#4FD8D2;--head-bg:#061326;
+  --danger:#FF8A96;--danger-bg:#3A1823;--warn:#F5B94D;--warn-bg:#382A0E;--ok:#6FD79A;--ok-bg:#12301F;--info:#7FB8F0;--info-bg:#132F4D;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px -10px rgba(0,0,0,.5);color-scheme:dark;
+}
+html{scroll-padding-top:76px;scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Figtree','Noto Sans Tamil',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+:lang(ta) body,html:lang(ta) body{line-height:1.7}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque','Noto Sans Tamil',system-ui,sans-serif;line-height:1.15;letter-spacing:-.015em;margin:0 0 .5em;font-weight:700}
+html:lang(ta) h1,html:lang(ta) h2,html:lang(ta) h3,html:lang(ta) h4{line-height:1.35;letter-spacing:0}
+h1{font-size:clamp(2rem,4.5vw,3.2rem)}h2{font-size:clamp(1.4rem,2.8vw,1.9rem)}h3{font-size:1.15rem}
+p{margin:0 0 .8em}a{color:var(--teal-ink);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%}
+.ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
+.container{width:min(1180px,100% - 2rem);margin-inline:auto}
+.muted{color:var(--muted)}.small{font-size:.875rem}.row{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}.between{justify-content:space-between}
+.stack>*+*{margin-top:1rem}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:0;background:#fff;color:#0B2545;padding:.6rem 1rem;z-index:100;border-radius:0 0 8px 0;font-weight:700}
+.skip:focus{left:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* top simulation notice banner */
+.demo-banner{background:var(--warn-bg);color:var(--warn);border-bottom:1px solid rgba(143,86,0,.2);font-size:.82rem;font-weight:600;padding:.4rem 0}
+.demo-banner .container{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:40;background:var(--head-bg);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.hdr-in{display:flex;align-items:center;gap:.8rem;min-height:64px}
+.brand{display:flex;align-items:center;gap:.65rem;color:#fff;text-decoration:none;margin-right:auto}
+.brand:hover{text-decoration:none}
+.brand-mark{width:38px;height:38px;border-radius:12px;background:var(--teal);display:grid;place-items:center;color:#06223A}
+.brand-mark .ic{width:22px;height:22px}
+.brand b{font-family:'Bricolage Grotesque',sans-serif;font-size:1.2rem;letter-spacing:-.01em;display:block;line-height:1.1}
+.brand small{display:block;font-size:.72rem;color:#A9BBD4;line-height:1.2}
+.nav{display:flex;align-items:center;gap:.25rem}
+.nav a.nl{color:#D5E0F0;text-decoration:none;padding:.5rem .8rem;border-radius:999px;font-weight:500;font-size:.95rem;transition:background .15s}
+.nav a.nl:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav a.nl[aria-current="page"]{background:rgba(43,196,190,.18);color:#fff;font-weight:700}
+.hdr-tools{display:flex;align-items:center;gap:.5rem}
+.seg{display:inline-flex;background:rgba(255,255,255,.1);border-radius:999px;padding:3px}
+.seg button{background:none;border:0;color:#D5E0F0;padding:.3rem .75rem;border-radius:999px;font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .15s,color .15s}
+.seg button[aria-pressed="true"]{background:#fff;color:#0B2545}
+.menu-btn{display:none;background:rgba(255,255,255,.1);border:0;color:#fff;width:42px;height:42px;border-radius:12px;cursor:pointer}
+.pill-off{display:inline-flex;align-items:center;gap:.35rem;background:var(--warn-bg);color:var(--warn);padding:.25rem .65rem;border-radius:999px;font-size:.8rem;font-weight:600;text-decoration:none;border:1px solid rgba(143,86,0,.3)}
+.pill-off:hover{background:var(--warn);color:#fff;text-decoration:none}
+.bell-wrap{position:relative}
+.icon-btn{position:relative;background:rgba(255,255,255,.1);border:0;color:#fff;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;cursor:pointer}
+.icon-btn:hover{background:rgba(255,255,255,.18)}
+.icon-btn .cnt{position:absolute;top:-4px;right:-4px;background:#FF5D6C;color:#fff;border-radius:999px;font-size:.68rem;min-width:18px;height:18px;display:grid;place-items:center;font-weight:700;padding:0 4px}
+.drop{position:absolute;right:0;top:48px;width:min(340px,88vw);background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:.75rem;z-index:60}
+.drop ul{list-style:none;margin:0;padding:0;max-height:300px;overflow:auto}
+.drop li{padding:.55rem .4rem;border-bottom:1px solid var(--line);font-size:.9rem}
+.drop li:last-child{border:0}.drop li.unread{font-weight:600;background:var(--surface-2)}
+.drop li small{display:block;color:var(--muted);font-weight:400}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:1.5px solid transparent;background:var(--btn);color:var(--btn-t);padding:.6rem 1.1rem;border-radius:12px;font:inherit;font-weight:600;font-size:.95rem;cursor:pointer;text-decoration:none;transition:background .15s,transform .1s;min-height:42px}
+.btn:hover{background:var(--btn-h);text-decoration:none}.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.light{background:#fff;color:#0B2545}.btn.light:hover{background:#E6EEF8}
+.btn.outline-w{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}.btn.outline-w:hover{background:rgba(255,255,255,.1)}
+.btn.danger{background:transparent;color:var(--danger);border-color:var(--danger)}.btn.danger:hover{background:var(--danger-bg)}
+.btn.sm{padding:.35rem .75rem;font-size:.85rem;border-radius:10px;min-height:34px}
+.btn[disabled]{opacity:.5;cursor:not-allowed;pointer-events:none}
+.btn.block{width:100%}
+
+/* hero */
+.hero{background:radial-gradient(900px 500px at 85% -10%,#1B4A7A 0,transparent 60%),var(--navy);color:#fff;position:relative;overflow:hidden}
+.ripples{position:absolute;right:-120px;top:-60px;width:620px;height:620px;opacity:.9;pointer-events:none}
+.hero-in{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:2.5rem;padding:3rem 0 3.5rem;align-items:center}
+.hero h1{color:#fff;max-width:16ch}
+html:lang(ta) .hero h1{max-width:18ch}
+.hero p.lead{font-size:1.12rem;color:#C9D8EC;max-width:52ch}
+.hero .actions{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.4rem 0 1rem}
+.helpline{display:inline-flex;align-items:center;gap:.5rem;color:#C9D8EC;font-size:.95rem}
+.helpline strong{color:#fff;font-size:1.05rem}
+.board{background:var(--surface);color:var(--text);border-radius:20px;padding:1.2rem;box-shadow:0 30px 60px -25px rgba(0,0,0,.6)}
+.board h2{font-size:1.05rem;display:flex;align-items:center;gap:.5rem;margin:0 0 .9rem}
+.live{width:10px;height:10px;border-radius:50%;background:#E5384D;position:relative}
+.live::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid #E5384D;opacity:.6;animation:pulse 1.8s ease-out infinite}
+@keyframes pulse{from{transform:scale(.6);opacity:.7}to{transform:scale(1.6);opacity:0}}
+.board h3{font-size:.85rem;color:var(--muted);font-family:inherit;font-weight:600;letter-spacing:0;margin:1rem 0 .4rem}
+.mini-alert{display:flex;gap:.6rem;background:var(--danger-bg);color:var(--danger);padding:.7rem;border-radius:12px;font-size:.92rem;font-weight:600}
+.mini-shel{display:grid;grid-template-columns:1fr auto;gap:.2rem .6rem;font-size:.9rem;margin-bottom:.55rem}
+.mini-shel .meter{grid-column:1/-1}
+.mini-counts{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;text-align:center}
+.mini-counts div{background:var(--surface-2);border-radius:10px;padding:.5rem .2rem}
+.mini-counts b{display:block;font-size:1.25rem;font-family:'Bricolage Grotesque',sans-serif}
+.mini-counts span{font-size:.7rem;color:var(--muted);line-height:1.2;display:block}
+
+/* alert banner */
+.banner{background:var(--danger-bg);color:var(--danger);border-bottom:1px solid color-mix(in srgb,var(--danger) 25%,transparent)}
+.banner-in{display:flex;align-items:center;gap:.8rem;padding:.7rem 0;flex-wrap:wrap}
+.banner strong{color:var(--danger)}
+.banner span.txt{color:var(--text);flex:1;min-width:220px}
+.banner a{font-weight:600;color:var(--danger);text-decoration:underline}
+
+/* sections */
+.section{padding:3.2rem 0}
+.section.alt{background:var(--surface)}
+.section-head{max-width:60ch;margin-bottom:1.8rem}
+.section-head p{color:var(--muted)}
+.grid{display:grid;gap:1.1rem}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem;box-shadow:var(--shadow)}
+.section.alt .card{background:var(--surface-2);box-shadow:none}
+.feat .fi{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--teal) 16%,transparent);color:var(--teal-ink);margin-bottom:.8rem}
+.feat .fi .ic{width:22px;height:22px}
+.feat p{color:var(--muted);margin:0}
+.meter{height:9px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter span{display:block;height:100%;background:var(--teal);border-radius:99px;transition:width .5s}
+.meter span.hot,.meter.low span{background:#E0762B}
+.res{padding:.9rem 0;border-bottom:1px solid var(--line)}
+.res:last-child{border:0}
+.res-h{display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem}
+.res-h>.ic{width:26px;height:26px;color:var(--teal-ink)}
+.res-h>div:nth-child(2){flex:1;display:flex;flex-direction:column;line-height:1.3}
+.res-n{text-align:right;font-size:.9rem}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{position:relative;padding-top:2.9rem}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;top:0;left:0;width:2.1rem;height:2.1rem;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700}
+html[data-theme="dark"] .steps li::before{background:var(--teal);color:#06223A}
+.steps li::after{content:"";position:absolute;top:1.05rem;left:2.6rem;right:-.6rem;height:2px;background:var(--line)}
+.steps li:last-child::after{display:none}
+.steps h3{margin-bottom:.2rem}.steps p{color:var(--muted);margin:0}
+.cta{background:var(--navy);color:#fff;border-radius:24px;padding:2.2rem;display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.cta h2{color:#fff;margin:0 0 .3rem}.cta p{margin:0;color:#C9D8EC}
+.ftr{background:var(--head-bg);color:#B7C8E0;padding:2.5rem 0 1.5rem;margin-top:2rem}
+.ftr a{color:#E2ECF8}.ftr h4{color:#fff;font-size:1rem}
+.ftr-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2rem}
+.ftr ul{list-style:none;padding:0;margin:0}.ftr li{margin:.3rem 0}
+.ftr .fine{border-top:1px solid rgba(255,255,255,.1);margin-top:1.8rem;padding-top:1rem;font-size:.85rem}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.18rem .6rem;border-radius:999px;font-size:.78rem;font-weight:600;white-space:nowrap}
+.st-Pending{background:var(--warn-bg);color:var(--warn)}
+.st-Acknowledged{background:var(--info-bg);color:var(--info)}
+.st-InProgress{background:color-mix(in srgb,var(--teal) 18%,transparent);color:var(--teal-ink)}
+.st-Resolved{background:var(--ok-bg);color:var(--ok)}
+.st-Cancelled,.rs-rejected,.sh-closed{background:var(--line);color:var(--muted)}
+.sev-low,.rs-verified,.sh-open,.lv-info{background:var(--ok-bg);color:var(--ok)}
+.sev-medium,.rs-pending,.lv-watch{background:var(--warn-bg);color:var(--warn)}
+.sev-high,.sh-full{background:#FFE6D3;color:#9A4300}
+html[data-theme="dark"] .sev-high,html[data-theme="dark"] .sh-full{background:#3A210E;color:#FFB27A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sev-high,:root:not([data-theme="light"]) .sh-full{background:#3A210E;color:#FFB27A}}
+.sev-critical,.lv-severe,.lv-warning{background:var(--danger-bg);color:var(--danger)}
+.badge-sample{background:rgba(143,86,0,.15);color:var(--warn);border:1px dashed var(--warn);font-size:.72rem}
+
+/* forms */
+.field{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem}
+.field>label,.fl{font-weight:600;font-size:.9rem}
+input,select,textarea{font:inherit;color:var(--text);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:.6rem .75rem;width:100%;min-height:44px}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid color-mix(in srgb,var(--teal) 45%,transparent);border-color:var(--teal-ink)}
+input[type=range]{padding:0;min-height:32px;accent-color:var(--teal)}
+input[type=checkbox],input[type=radio]{width:auto;min-height:0;accent-color:var(--teal-ink)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0 1rem}
+.form-grid .full{grid-column:1/-1}
+.input-with-btn{display:flex;gap:.5rem;align-items:stretch}
+.input-with-btn input{flex:1}
+.checks{display:flex;flex-wrap:wrap;gap:.5rem}
+.checks label{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;font-size:.9rem;font-weight:500}
+.checks label:has(input:checked){background:color-mix(in srgb,var(--teal) 16%,transparent);border-color:var(--teal-ink)}
+.hint{font-size:.82rem;color:var(--muted)}
+.err{color:var(--danger);font-size:.88rem;min-height:1.2em;margin:.2rem 0 .6rem;font-weight:600}
+.photo-prev-wrap{margin-top:.5rem;display:none;position:relative;max-width:260px}
+.photo-prev{width:100%;border-radius:12px;border:1px solid var(--line);display:block}
+.photo-remove{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:0;border-radius:999px;padding:.2rem .6rem;font-size:.78rem;cursor:pointer}
+.auth{max-width:460px;margin:2rem auto}
+.demo{margin-top:1.2rem;padding-top:1rem;border-top:1px dashed var(--line)}
+.demo .row{justify-content:space-between;margin:.35rem 0;font-size:.9rem}
+
+/* dashboard */
+.dash{display:grid;grid-template-columns:250px 1fr;gap:1.5rem;padding:1.6rem 0 3rem;align-items:start}
+.side{position:sticky;top:80px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:.8rem;box-shadow:var(--shadow)}
+.me{display:flex;align-items:center;gap:.7rem;padding:.4rem .4rem .8rem;border-bottom:1px solid var(--line);margin-bottom:.5rem}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.me b{display:block;line-height:1.2}.me small{color:var(--muted)}
+.tabs{display:flex;flex-direction:column;gap:2px}
+.tabs a{display:flex;align-items:center;gap:.6rem;padding:.6rem .7rem;border-radius:10px;color:var(--text);text-decoration:none;font-weight:500;font-size:.95rem}
+.tabs a:hover{background:var(--surface-2);text-decoration:none}
+.tabs a[aria-current="page"]{background:color-mix(in srgb,var(--teal) 16%,transparent);color:var(--teal-ink);font-weight:700}
+.tabs .tc{margin-left:auto;background:var(--danger-bg);color:var(--danger);font-size:.72rem;border-radius:99px;padding:0 .45rem;font-weight:700}
+.page-head{margin-bottom:1.2rem}.page-head p{color:var(--muted);margin:0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.9rem;margin-bottom:1.2rem}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1rem;box-shadow:var(--shadow)}
+.stat b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:1.9rem;line-height:1.1}
+.stat span{color:var(--muted);font-size:.88rem}
+.list>*+*{margin-top:.9rem}
+.item h3{margin:0}
+.item-top{display:flex;justify-content:space-between;gap:.8rem;align-items:flex-start;flex-wrap:wrap}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem 1rem;color:var(--muted);font-size:.88rem;margin:.4rem 0}
+.meta span{display:inline-flex;align-items:center;gap:.3rem}
+.actions-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
+.stepper{display:flex;list-style:none;margin:.9rem 0 .4rem;padding:0;gap:.3rem}
+.stepper li{flex:1;font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;gap:.3rem;align-items:flex-start;position:relative}
+.stepper .dot{width:100%;height:6px;border-radius:99px;background:var(--line)}
+.stepper li.done .dot{background:var(--teal)}.stepper li.now .dot{background:var(--teal-ink)}
+.stepper li.now{color:var(--text);font-weight:700}
+.updates{margin:.8rem 0 0;padding:0;list-style:none;border-top:1px solid var(--line);font-size:.88rem}
+.updates li{padding:.4rem 0;border-bottom:1px dashed var(--line);display:flex;gap:.6rem;justify-content:space-between}
+.updates time{color:var(--muted);white-space:nowrap}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;align-items:end;margin-bottom:1rem}
+.filters .field{margin:0}
+.empty{text-align:center;padding:2rem 1rem;color:var(--muted);border:2px dashed var(--line);border-radius:var(--r)}
+.empty .ic{width:32px;height:32px;margin-bottom:.4rem}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chip{display:inline-flex;align-items:center;gap:.3rem;font-size:.8rem;background:var(--surface-2);border:1px solid var(--line);padding:.1rem .55rem;border-radius:99px}
+.chart-row{display:grid;grid-template-columns:120px 1fr 36px;gap:.6rem;align-items:center;margin:.45rem 0;font-size:.9rem}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:.6rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.82rem}
+.inline-form{display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;margin-top:.6rem}
+.inline-form .field{margin:0;min-width:110px;flex:1}
+.thumb{width:100%;max-width:260px;border-radius:12px;margin-top:.5rem;border:1px solid var(--line)}
+.tgl{display:flex;align-items:center;gap:.6rem;font-weight:600}
+.switch{width:44px;height:26px;appearance:none;-webkit-appearance:none;background:var(--line);border-radius:99px;position:relative;cursor:pointer;min-height:0;border:0;padding:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}
+.switch:checked{background:var(--btn)}.switch:checked::after{left:21px}
+
+/* toasts + dialog */
+.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:1rem;display:flex;flex-direction:column;gap:.5rem;z-index:90;width:min(460px,94vw)}
+.toast{background:var(--navy);color:#fff;border-radius:12px;padding:.75rem 1rem;box-shadow:0 12px 30px -8px rgba(0,0,0,.5);display:flex;gap:.6rem;align-items:center;animation:tin .25s ease-out}
+.toast.warn{background:#8F5600}.toast.err{background:#B8243A}
+@keyframes tin{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+dialog{border:0;border-radius:20px;padding:0;width:min(520px,94vw);background:var(--surface);color:var(--text);box-shadow:0 30px 80px -20px rgba(0,0,0,.6)}
+dialog::backdrop{background:rgba(6,19,38,.6)}
+.dlg{padding:1.4rem;max-height:86vh;overflow:auto}
+.dlg h2{font-size:1.3rem}
+
+/* responsive */
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;padding:2.5rem 0 3rem}
+  .g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:repeat(2,1fr)}.steps li::after{display:none}
+  .ripples{opacity:.5}
+}
+@media (max-width:860px){
+  .menu-btn{display:grid;place-items:center}
+  .nav{display:none;position:absolute;left:0;right:0;top:100%;background:var(--head-bg);flex-direction:column;align-items:stretch;padding:.6rem 1rem 1rem;border-bottom:1px solid rgba(255,255,255,.1)}
+  .nav.open{display:flex}
+  .nav a.nl{padding:.8rem}
+  .dash{grid-template-columns:1fr;gap:1rem}
+  .side{position:sticky;top:64px;z-index:20;padding:.4rem;border-radius:14px}
+  .me{display:none}
+  .tabs{flex-direction:row;overflow-x:auto;scrollbar-width:thin}
+  .tabs a{white-space:nowrap;flex:none}
+  .ftr-grid{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .brand small{display:none}
+  .hdr-tools .btn.sm.hide-s{display:none}
+  .steps{grid-template-columns:1fr}
+  .chart-row{grid-template-columns:90px 1fr 30px}
+  .section{padding:2.2rem 0}
+  .input-with-btn{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+<symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></symbol>
+<symbol id="i-pill" viewBox="0 0 24 24"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></symbol>
+<symbol id="i-buoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></symbol>
+<symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></symbol>
+<symbol id="i-shirt" viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+<symbol id="i-wifioff" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M8.5 16.4a5 5 0 0 1 7 0"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6"/><path d="M5 12.9a10 10 0 0 1 5.2-2.7"/><path d="M22 8.8a15 15 0 0 0-8.9-3.7"/><path d="M19 12.9a10 10 0 0 0-1.7-1.3"/><path d="m2 2 20 20"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></symbol>
+<symbol id="i-clip" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+<symbol id="i-mega" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+<symbol id="i-bars" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16v-5M12 16V7M17 16v-8"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
+<symbol id="i-bed" viewBox="0 0 24 24"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+</svg>
+
+<a class="skip" href="#app" id="skip">Skip to main content</a>
+<aside class="demo-banner" id="demo-banner" aria-label="Demo notice">
+  <div class="container">
+    <span>⚠️ <strong id="db-title">Sample Demonstration Data:</strong> <span id="db-text">This platform runs locally on your browser. Numbers, alerts, and coordinates shown are sample simulation data.</span></span>
+    <span><span id="db-call">Emergency Helpline:</span> <strong style="color:var(--text)">112</strong></span>
+  </div>
+</aside>
+<header class="hdr" id="hdr"></header>
+<main id="app" tabindex="-1"></main>
+<footer class="ftr" id="ftr"></footer>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<dialog id="dlg" aria-labelledby="dlg-title"><div class="dlg" id="dlg-body"></div></dialog>
+
+<script type="module">
+(function(){
+'use strict';
+
+/* ---------- translations: [key, English, Tamil] ---------- */
+var L=[
+["brand","NammaRescue","NammaRescue"],
+["tagline","Community Disaster Management","சமூக பேரிடர் மேலாண்மை"],
+["skip","Skip to main content","முதன்மை உள்ளடக்கத்திற்குச் செல்"],
+["nav.home","Home","முகப்பு"],["nav.alerts","Alerts","எச்சரிக்கைகள்"],["nav.shelters","Shelters","முகாம்கள்"],["nav.resources","Resources","வளங்கள்"],["nav.dashboard","My dashboard","என் டாஷ்போர்டு"],
+["menu","Menu","பட்டி"],["langLabel","Language","மொழி"],["login","Log in","உள்நுழை"],["register","Create account","கணக்கை உருவாக்கு"],["logout","Log out","வெளியேறு"],
+["bell","Notifications","அறிவிப்புகள்"],["noNotif","No notifications yet.","இதுவரை அறிவிப்புகள் இல்லை."],["markRead","Mark all as read","அனைத்தையும் படித்ததாகக் குறி"],
+["offlineTag","Offline (Local Storage Active)","இணையமின்றி (உள்ளூர் சேமிப்பு செயல்படுகிறது)"],["onlineTag","Online","இணையத்தில்"],
+["helpline","Emergency helpline","அவசர உதவி எண்"],
+["heroTitle","When disaster strikes, the neighbourhood responds together.","பேரிடர் வரும்போது, பகுதி மக்கள் ஒன்றாகச் செயல்படுவார்கள்."],
+["heroSub","Report incidents, request help, and coordinate volunteers, shelters and supplies in one place, in English and Tamil.","சம்பவங்களைப் புகாரளியுங்கள், உதவி கோருங்கள், தன்னார்வலர்கள், முகாம்கள், பொருட்களை ஒரே இடத்தில் ஒருங்கிணையுங்கள் - ஆங்கிலத்திலும் தமிழிலும்."],
+["ctaReport","Report a disaster","பேரிடரைப் புகாரளி"],["ctaHelp","Request help","உதவி கோரு"],["ctaVolunteer","Become a volunteer","தன்னார்வலராகுங்கள்"],["ctaShelter","Find a shelter","முகாமைக் கண்டுபிடி"],
+["boardTitle","Live situation board","நேரடி நிலவர பலகை"],["boardAlerts","Active alert","செயலில் உள்ள எச்சரிக்கை"],["boardShelters","Shelter space","முகாம் இடவசதி"],["boardRequests","Help requests","உதவிக் கோரிக்கைகள்"],
+["statOpen","Open","திறந்தவை"],["statVol","Volunteers","தன்னார்வலர்"],["statBeds","Free beds","காலிப் படுக்கை"],["statDone","Resolved","தீர்ந்தவை"],
+["verifiedAlert","Verified alert","சரிபார்க்கப்பட்ட எச்சரிக்கை"],["sampleBadge","Sample Data","மாதிரித் தரவு"],["viewAlerts","View all alerts","அனைத்து எச்சரிக்கைகளும்"],
+["featuresTitle","Everything a neighbourhood needs in an emergency","அவசரகாலத்தில் ஒரு பகுதிக்குத் தேவையான அனைத்தும்"],
+["featuresSub","Built for residents, volunteers and the control room, with each group seeing only what they need.","குடியிருப்பாளர்கள், தன்னார்வலர்கள், கட்டுப்பாட்டு அறை ஆகியோருக்காக உருவாக்கப்பட்டது; ஒவ்வொருவரும் தங்களுக்குத் தேவையானதை மட்டும் காண்பார்கள்."],
+["f1t","Report incidents","சம்பவங்களைப் புகாரளி"],["f1d","Share what is happening with location, severity, GPS and photo.","இடம், தீவிரம், ஜிபிஎஸ் மற்றும் புகைப்படத்துடன் நடப்பதைப் பகிருங்கள்."],
+["f2t","Request assistance","உதவி கோரு"],["f2d","Ask for food, water, clothing, medicine or rescue and follow every update.","உணவு, குடிநீர், உடை, மருந்து அல்லது மீட்பு கோருங்கள்; ஒவ்வொரு புதுப்பிப்பையும் பின்தொடருங்கள்."],
+["f3t","Volunteer coordination","தன்னார்வலர் ஒருங்கிணைப்பு"],["f3d","Volunteers pick up nearby tasks that match their skills.","தன்னார்வலர்கள் தங்கள் திறன்களுக்குப் பொருந்தும் அருகிலுள்ள பணிகளை ஏற்கிறார்கள்."],
+["f4t","Verified alerts","சரிபார்க்கப்பட்ட எச்சரிக்கைகள்"],["f4d","Only the control room publishes alerts, so you can trust what you read.","கட்டுப்பாட்டு அறை மட்டுமே எச்சரிக்கைகளை வெளியிடும்; எனவே நீங்கள் நம்பலாம்."],
+["f5t","Shelter finder","முகாம் தேடல்"],["f5d","See open shelters, free beds and facilities before you travel.","பயணிக்கும் முன் திறந்த முகாம்கள், காலிப் படுக்கைகள், வசதிகளைப் பாருங்கள்."],
+["f6t","Works offline","இணையமின்றி செயல்படும்"],["f6d","Reports are kept on your device and sent automatically when the network returns.","புகார்கள் உங்கள் சாதனத்தில் சேமிக்கப்பட்டு, நெட்வொர்க் திரும்பியதும் தானாக அனுப்பப்படும்."],
+["resTitle","Community resources available now","இப்போது கிடைக்கும் சமூக வளங்கள்"],["resSub","Stock held by the community depots, updated by the control room.","சமூகக் கிடங்குகளில் உள்ள இருப்பு; கட்டுப்பாட்டு அறையால் புதுப்பிக்கப்படுகிறது."],
+["of","of","/"],["lowStock","Running low","குறைவாக உள்ளது"],["storedAt","Stored at","சேமித்த இடம்"],
+["shelTitle","Nearby shelters","அருகிலுள்ள முகாம்கள்"],["shelSub","Sorted by free space so you can pick the closest with room.","காலியிடத்தின்படி வரிசைப்படுத்தப்பட்டது; இடமுள்ள அருகிலுள்ள முகாமைத் தேர்ந்தெடுக்கலாம்."],["viewAll","View all","அனைத்தையும் காண்"],
+["howTitle","How a request moves","ஒரு கோரிக்கை எவ்வாறு நகர்கிறது"],
+["h1t","Submit","சமர்ப்பி"],["h1d","You send a report or a request for help.","நீங்கள் புகார் அல்லது உதவிக் கோரிக்கையை அனுப்புகிறீர்கள்."],
+["h2t","Verify","சரிபார்"],["h2d","The control room checks it and acknowledges it.","கட்டுப்பாட்டு அறை அதைச் சரிபார்த்து ஏற்கிறது."],
+["h3t","Dispatch","அனுப்பு"],["h3d","A volunteer accepts the task and starts work.","ஒரு தன்னார்வலர் பணியை ஏற்றுத் தொடங்குகிறார்."],
+["h4t","Resolve","தீர்வு"],["h4d","Help arrives and the request is closed.","உதவி சென்றடைந்து கோரிக்கை முடிக்கப்படுகிறது."],
+["ctaTitle","Get set up before the next storm","அடுத்த புயலுக்கு முன் தயாராகுங்கள்"],["ctaSub","Create a free account in under a minute.","ஒரு நிமிடத்திற்குள் இலவசக் கணக்கை உருவாக்குங்கள்."],
+["footAbout","A community platform for reporting disasters, requesting help and coordinating relief.","பேரிடர்களைப் புகாரளிக்க, உதவி கோர, நிவாரணத்தை ஒருங்கிணைக்க ஒரு சமூகத் தளம்."],
+["footLinks","Explore","பார்வையிட"],["footHelp","Get help","உதவி பெற"],
+["footSample","Notice: This application runs completely locally in demonstration mode with sample data. For real-life emergencies, call 112 immediately.","குறிப்பு: இந்த தளம் மாதிரித் தரவுகளுடன் உங்கள் கணினியில் உள்ளூரில் இயங்குகிறது. அவசர காலத்தில் உடனடியாக 112 ஐ அழைக்கவும்."],
+["stateHelpline","State disaster control room: 1070","மாநில பேரிடர் கட்டுப்பாட்டு அறை: 1070"],
+["loginTitle","Welcome back","மீண்டும் வருக"],["loginSub","Log in to open your dashboard.","உங்கள் டாஷ்போர்டைத் திறக்க உள்நுழையுங்கள்."],
+["email","Email","மின்னஞ்சல்"],["password","Password","கடவுச்சொல்"],["fullName","Full name","முழுப் பெயர்"],["phone","Phone number","தொலைபேசி எண்"],
+["joinAs","I want to join as","நான் இணைய விரும்புவது"],["role.user","Community member","சமூக உறுப்பினர்"],["role.volunteer","Volunteer","தன்னார்வலர்"],["role.admin","Administrator","நிர்வாகி"],
+["noAccount","New here?","புதியவரா?"],["haveAccount","Already registered?","ஏற்கனவே பதிவு செய்தவரா?"],
+["demoTitle","Demo accounts (Click to fill)","மாதிரி கணக்குகள் (நிரப்ப கிளிக் செய்க)"],["useDemo","Fill in","நிரப்பு"],
+["regTitle","Create your account","உங்கள் கணக்கை உருவாக்குங்கள்"],["regSub","Choose how you want to take part.","நீங்கள் எவ்வாறு பங்கேற்க விரும்புகிறீர்கள் என்பதைத் தேர்ந்தெடுங்கள்."],
+["errCreds","Email or password is incorrect.","மின்னஞ்சல் அல்லது கடவுச்சொல் தவறானது."],["errExists","An account with this email already exists.","இந்த மின்னஞ்சலில் ஏற்கனவே கணக்கு உள்ளது."],["errPass","Use at least 6 characters for the password.","கடவுச்சொல் குறைந்தது 6 எழுத்துகள் இருக்க வேண்டும்."],
+["errMissing","Please fill in all required fields.","தேவையான அனைத்து விவரங்களையும் நிரப்பவும்."],
+["welcome","Welcome, {name}.","வரவேற்கிறோம், {name}."],["loggedOut","You have logged out.","நீங்கள் வெளியேறிவிட்டீர்கள்."],["needLogin","Log in to continue.","தொடர உள்நுழையுங்கள்."],
+["tab.user.overview","Overview","மேலோட்டம்"],["tab.user.report","Report disaster","பேரிடர் புகார்"],["tab.user.request","Request help","உதவி கோரிக்கை"],["tab.user.myrequests","My requests","என் கோரிக்கைகள்"],["tab.user.alerts","Alerts and shelters","எச்சரிக்கைகள், முகாம்கள்"],["tab.user.resources","Resources","வளங்கள்"],["tab.user.offline","Offline reports","இணையமற்ற புகார்கள்"],
+["tab.volunteer.tasks","Find tasks","பணிகளைத் தேடு"],["tab.volunteer.mytasks","My tasks","என் பணிகள்"],["tab.volunteer.distribution","Record aid","உதவிப் பதிவு"],["tab.volunteer.alerts","Alerts and shelters","எச்சரிக்கைகள், முகாம்கள்"],["tab.volunteer.profile","Profile","சுயவிவரம்"],
+["tab.admin.overview","Overview","மேலோட்டம்"],["tab.admin.reports","Reports","புகார்கள்"],["tab.admin.requests","Requests","கோரிக்கைகள்"],["tab.admin.alerts","Alerts","எச்சரிக்கைகள்"],["tab.admin.shelters","Shelters","முகாம்கள்"],["tab.admin.resources","Resources","வளங்கள்"],["tab.admin.people","People","நபர்கள்"],
+["hello","Hello, {name}","வணக்கம், {name}"],["overviewSub","Here is where things stand.","தற்போதைய நிலை இதோ."],
+["myOpen","Open requests","திறந்த கோரிக்கைகள்"],["myReports","Reports sent","அனுப்பிய புகார்கள்"],["waitSync","Waiting to sync","ஒத்திசைவுக்காகக் காத்திருப்பவை"],
+["latestAlert","Latest verified alert","சமீபத்திய சரிபார்க்கப்பட்ட எச்சரிக்கை"],["recent","Recent requests","சமீபத்திய கோரிக்கைகள்"],
+["disasterType","Disaster type","பேரிடர் வகை"],
+["type.flood","Flood","வெள்ளம்"],["type.cyclone","Cyclone","புயல்"],["type.fire","Fire","தீ விபத்து"],["type.earthquake","Earthquake","நிலநடுக்கம்"],["type.landslide","Landslide","நிலச்சரிவு"],["type.heatwave","Heatwave","வெப்ப அலை"],["type.tsunami","Tsunami","சுனாமி"],["type.other","Other","மற்றவை"],
+["location","Location / Address","இடம் / முகவரி"],["locationPh","Street, area or landmark","தெரு, பகுதி அல்லது அடையாளம்"],
+["detectGPS","Use GPS Location","ஜிபிஎஸ் இருப்பிடத்தைப் பயன்படுத்து"],
+["detectingGPS","Acquiring GPS...","ஜிபிஎஸ் தேடுகிறது..."],
+["gpsDenied","Location access denied. Please enter manually.","இருப்பிட அனுமதி மறுக்கப்பட்டது. தயவுசெய்து கையேடாக தட்டச்சு செய்யவும்."],
+["gpsNotSupp","Geolocation is not supported by your browser.","உங்கள் உலாவியில் ஜிபிஎஸ் வசதி ஆதரிக்கப்படவில்லை."],
+["gpsSuccess","GPS coordinates captured!","ஜிபிஎஸ் ஒருங்கிணைப்புகள் பெறப்பட்டன!"],
+["description","Description of the situation","சம்பவத்தின் விவரம்"],["descPh","What is happening? Who needs help?","என்ன நடக்கிறது? யாருக்கு உதவி தேவை?"],
+["incidentDate","Date of incident","சம்பவ தேதி"],["severity","Severity","தீவிரம்"],
+["sev.low","Low","குறைவு"],["sev.medium","Medium","நடுத்தரம்"],["sev.high","High","அதிகம்"],["sev.critical","Critical","மிகவும் அவசரம்"],
+["photo","Photo (optional)","புகைப்படம் (விருப்பம்)"],["photoHint","Images are compressed locally to fit in storage.","படங்கள் உள்ளூரில் சுருக்கப்பட்டு சேமிக்கப்படுகின்றன."],
+["removePhoto","Remove photo","புகைப்படத்தை நீக்கு"],
+["submitReport","Submit report","புகாரை அனுப்பு"],
+["reportTitle","Report a disaster","பேரிடரைப் புகாரளி"],["reportSub","The control room verifies every report before volunteer dispatch.","தன்னார்வலர்களை அனுப்புவதற்கு முன் கட்டுப்பாட்டு அறை ஒவ்வொரு புகாரையும் சரிபார்க்கும்."],
+["requestTitle","Request emergency assistance","அவசர உதவியைக் கோருங்கள்"],["requestSub","Tell us what you need and where. Volunteers will respond.","உங்களுக்கு என்ன தேவை, எங்கே என்பதைச் சொல்லுங்கள். தன்னார்வலர்கள் உதவுவார்கள்."],
+["category","Type of help needed","தேவைப்படும் உதவி வகை"],["cat.food","Food","உணவு"],["cat.water","Drinking water","குடிநீர்"],["cat.clothing","Clothing","உடை"],["cat.medicine","Medicines","மருந்துகள்"],["cat.rescue","Rescue support","மீட்பு உதவி"],
+["people","People needing help","உதவி தேவைப்படுவோர்"],["urgency","Urgency","அவசரம்"],["submitRequest","Send request","கோரிக்கையை அனுப்பு"],["notes","Extra details or landmarks","கூடுதல் விவரங்கள்"],
+["save","Save changes","மாற்றங்களைச் சேமி"],["cancel","Cancel","ரத்து செய்"],["close","Close","மூடு"],["edit","Edit","திருத்து"],["cancelRequest","Cancel request","கோரிக்கையை ரத்து செய்"],["keep","Keep it","வைத்திரு"],
+["confirmCancel","Cancel this request? This cannot be undone.","இந்த கோரிக்கையை ரத்து செய்யவா? இதை மீட்க முடியாது."],["editRequest","Edit request","கோரிக்கையைத் திருத்து"],
+["status","Status","நிலை"],["st.Pending","Pending","நிலுவையில்"],["st.Acknowledged","Acknowledged","ஏற்கப்பட்டது"],["st.InProgress","In Progress","நடைபெறுகிறது"],["st.Resolved","Resolved","தீர்க்கப்பட்டது"],["st.Cancelled","Cancelled","ரத்து செய்யப்பட்டது"],
+["rs.pending","Awaiting verification","சரிபார்ப்புக்குக் காத்திருக்கிறது"],["rs.verified","Verified","சரிபார்க்கப்பட்டது"],["rs.rejected","Not verified","சரிபார்க்கப்படவில்லை"],
+["toast.reportSent","Report submitted to control room.","புகார் கட்டுப்பாட்டு அறைக்கு அனுப்பப்பட்டது."],["toast.reportSaved","You are offline. The report is saved locally on this device.","நீங்கள் இணையத்தில் இல்லை. புகார் இந்த சாதனத்தில் பாதுகாப்பாக சேமிக்கப்பட்டது."],
+["toast.requestSent","Emergency assistance request sent.","உதவிக் கோரிக்கை அனுப்பப்பட்டது."],["toast.requestSaved","You are offline. The request is saved locally on this device.","நீங்கள் இணையத்தில் இல்லை. கோரிக்கை இந்த சாதனத்தில் சேமிக்கப்பட்டது."],
+["toast.updated","Changes saved.","மாற்றங்கள் சேமிக்கப்பட்டன."],["toast.cancelled","Request cancelled.","கோரிக்கை ரத்து செய்யப்பட்டது."],
+["toast.synced","{n} offline item(s) successfully synced!","சேமித்த {n} பதிவு(கள்) வெற்றிகரமாக ஒத்திசைக்கப்பட்டன!"],["toast.nothingSync","Nothing is waiting to sync.","ஒத்திசைக்க புதிய பதிவுகள் எதுவும் இல்லை."],
+["toast.nowOffline","Offline mode active. Submissions will be kept on this device.","இணையமற்ற நிலை இயக்கப்பட்டுள்ளது. புதிய பதிவுகள் இந்த சாதனத்திலேயே இருக்கும்."],["toast.nowOnline","Internet connection detected. Back online.","இணைய இணைப்பு கண்டறியப்பட்டது."],
+["toast.accepted","Task accepted and assigned to you.","பணி ஏற்கப்பட்டு உங்களுக்கு ஒதுக்கப்பட்டது."],["toast.progress","Progress updated.","முன்னேற்றம் புதுப்பிக்கப்பட்டது."],["toast.completed","Task marked as completed.","பணி முடிந்ததாகக் குறிக்கப்பட்டது."],
+["toast.distRecorded","Resource distribution recorded.","வள விநியோகம் பதிவு செய்யப்பட்டது."],["toast.profileSaved","Volunteer profile saved.","தன்னார்வலர் சுயவிவரம் சேமிக்கப்பட்டது."],
+["toast.published","Emergency alert published.","அவசர எச்சரிக்கை வெளியிடப்பட்டது."],["toast.withdrawn","Alert withdrawn.","எச்சரிக்கை திரும்பப் பெறப்பட்டது."],["toast.assigned","Volunteer assignment updated.","தன்னார்வலர் ஒதுக்கீடு புதுப்பிக்கப்பட்டது."],
+["toast.verified","Report marked as verified.","புகார் சரிபார்க்கப்பட்டது."],["toast.rejected","Report marked as unverified.","புகார் சரிபார்க்கப்படவில்லை."],
+["toast.added","Item added successfully.","வெற்றிகரமாகச் சேர்க்கப்பட்டது."],["toast.storage","Browser storage is nearly full. Removing excess photos.","உலாவியின் சேமிப்பிடம் நிறைந்துள்ளது."],
+["toast.profileFirst","Please complete your volunteer profile before accepting tasks.","பணிகளை ஏற்கும் முன் தன்னார்வலர் சுயவிவரத்தை நிரப்புங்கள்."],["toast.reset","Demo data has been reset to defaults.","டெமோ தரவு மீட்டமைக்கப்பட்டது."],
+["offlineTitle","Offline reports stored on this device","இந்த சாதனத்தில் உள்ள இணையமற்ற புகார்கள்"],["offlineSub","Anything submitted while without network connectivity waits here until synced.","இணையமின்றி சமர்ப்பித்தவை ஒத்திசைக்கப்படும் வரை பாதுகாப்பாக இங்கே காத்திருக்கும்."],
+["simOffline","Simulate Offline Mode (Toggle network status)","இணையமற்ற நிலையை உருவகப்படுத்து (சோதனைக்கு)"],["simHint","Toggle this on to test submitting disaster reports when internet is cut off during a storm.","புயலின் போது இணையம் துண்டிக்கப்பட்டால் புகார் எவ்வாறு சேமிக்கப்படுகிறது என்பதைச் சோதிக்க இதைப் பயன்படுத்துங்கள்."],
+["syncNow","Sync Now","இப்போது ஒத்திசை"],["syncQueued","Waiting to sync","ஒத்திசைவுக்காகக் காத்திருக்கிறது"],["syncDone","Synced","ஒத்திசைக்கப்பட்டது"],["savedOn","Saved locally","உள்ளூரில் சேமித்தது"],["syncedOn","Synced at","ஒத்திசைத்த நேரம்"],
+["noOffline","Nothing saved offline right now. When you submit without internet, it appears here.","இணையமின்றி சேமித்தவை இல்லை. நெட்வொர்க் இல்லாமல் அனுப்பும்போது இங்கே தோன்றும்."],
+["kindReport","Disaster report","பேரிடர் புகார்"],["kindRequest","Assistance request","உதவிக் கோரிக்கை"],["offlineBanner","Network disconnected. New submissions will be saved locally on this browser.","இணையம் துண்டிக்கப்பட்டுள்ளது. பதிவுகள் இந்த உலாவியில் உள்ளூரில் சேமிக்கப்படும்."],
+["noRequests","You have not made a request yet.","நீங்கள் இன்னும் கோரிக்கை எதுவும் செய்யவில்லை."],["noReports","You have not sent a report yet.","நீங்கள் இன்னும் புகார் எதுவும் அனுப்பவில்லை."],
+["assignedTo","Assigned to","ஒதுக்கப்பட்டவர்"],["updates","Live updates","நேரடிப் புதுப்பிப்புகள்"],["submitted","Submitted","சமர்ப்பித்தது"],["myReportsTitle","My disaster reports","என் பேரிடர் புகார்கள்"],["myRequestsTitle","My assistance requests","என் உதவிக் கோரிக்கைகள்"],
+["upd.created","Request submitted","கோரிக்கை சமர்ப்பிக்கப்பட்டது"],["upd.status","Status changed to {status}","நிலை {status} ஆக மாற்றப்பட்டது"],["upd.assigned","Assigned to volunteer {name}","தன்னார்வலர் {name} அவர்களுக்கு ஒதுக்கப்பட்டது"],["upd.progress","Progress updated to {pct}%","முன்னேற்றம் {pct}%"],
+["alertsTitle","Verified Emergency Alerts","சரிபார்க்கப்பட்ட அவசர எச்சரிக்கைகள்"],["alertsSub","Broadcast by the disaster control room. Clearly labeled as sample simulation data.","கட்டுப்பாட்டு அறையால் வெளியிடப்படுகின்றன. மாதிரித் தரவு என குறிக்கப்பட்டுள்ளது."],
+["lv.info","Information","தகவல்"],["lv.watch","Watch","கவனம்"],["lv.warning","Warning","எச்சரிக்கை"],["lv.severe","Severe","தீவிரம்"],
+["area","Area / District","பகுதி / மாவட்டம்"],["issued","Issued","வெளியிட்டது"],["noAlerts","There are no active alerts at this time.","செயலில் உள்ள எச்சரிக்கைகள் இல்லை."],
+["sheltersTitle","Emergency Shelters & Relief Camps","அவசரகால நிவாரண முகாம்கள்"],["findShelter","Search by area or shelter name","பகுதி அல்லது முகாம் பெயரால் தேடு"],["freeOf","{free} of {cap} beds free","{cap} இல் {free} படுக்கைகள் காலி"],["contact","Contact phone","தொடர்பு எண்"],
+["fac.water","Drinking water","குடிநீர்"],["fac.food","Hot meals","உணவு"],["fac.medical","Medical aid","மருத்துவ உதவி"],["fac.power","Power backup","மின்சார காப்பு"],["fac.beds","Beds","படுக்கைகள்"],
+["shelter.open","Open","திறந்துள்ளது"],["shelter.full","Full","நிரம்பியது"],["shelter.closed","Closed","மூடப்பட்டது"],["noShelters","No shelters match your search query.","உங்கள் தேடலுக்குப் பொருந்தும் முகாம்கள் இல்லை."],
+["resourcesTitle","Community Relief Resources","சமூக நிவாரண வளங்கள்"],
+["profileTitle","Volunteer Profile","தன்னார்வலர் சுயவிவரம்"],["profileSub","Coordinators use your skills and service area to dispatch relevant tasks.","உங்களுக்குப் பொருந்தும் அருகிலுள்ள பணிகளை ஒதுக்க ஒருங்கிணைப்பாளர்கள் இதைப் பயன்படுத்துவார்கள்."],
+["skills","Skills & Capabilities","திறன்கள்"],["skill.firstaid","First aid","முதலுதவி"],["skill.rescue","Rescue and boating","மீட்பு மற்றும் படகு"],["skill.medical","Medical","மருத்துவம்"],["skill.logistics","Logistics & Transport","தளவாடம்"],["skill.cooking","Community cooking","சமையல்"],["skill.counselling","Counselling & Trauma care","ஆலோசனை"],["skill.driving","Vehicle driving","வாகன ஓட்டம்"],["skill.translation","Translation","மொழிபெயர்ப்பு"],
+["serviceArea","Primary Service Area (comma-separated)","முதன்மை சேவைப் பகுதி"],["serviceAreaPh","e.g., Ambattur, Avadi, Anna Nagar","எ.கா: அம்பத்தூர், ஆவடி, அண்ணா நகர்"],["availability","Availability","கிடைக்கும் நேரம்"],
+["av.anytime","Anytime (24/7 emergency response)","எப்போதும் (24/7)"],["av.weekdays","Weekdays","வார நாட்கள்"],["av.weekends","Weekends only","வார இறுதி"],["av.evenings","Evenings only","மாலை நேரம்"],
+["saveProfile","Save profile","சுயவிவரத்தைச் சேமி"],["profileNeeded","Please complete your profile so coordinators know your service zone.","நீங்கள் எங்கு உதவ முடியும் என்பதை அறிய சுயவிவரத்தை நிரப்புங்கள்."],
+["tasksTitle","Find Volunteer Tasks","பணிகளைத் தேடு"],["tasksSub","Open community requests waiting for volunteer dispatch.","தன்னார்வலருக்காகக் காத்திருக்கும் மக்கள் உதவிக் கோரிக்கைகள்."],
+["filters","Search Filters","வடிகட்டிகள்"],["all","All","அனைத்தும்"],["locContains","Location contains","இடம் உள்ளடக்கியது"],["myAreaOnly","Only match my service area","என் சேவைப் பகுதி மட்டும்"],["clearFilters","Clear filters","வடிகட்டிகளை அகற்று"],
+["noTasks","No requests currently match these filters.","இந்த வடிகட்டிகளுக்குப் பொருந்தும் கோரிக்கைகள் இல்லை."],
+["acceptTask","Accept task","பணியை ஏற்கவும்"],["startWork","Start work","பணியைத் தொடங்கு"],["updateProgress","Update progress","முன்னேற்றத்தைப் புதுப்பி"],["markComplete","Mark completed","முடிந்ததாகக் குறி"],
+["progressNote","Progress notes (e.g., arrived on site, delivered supplies)","முன்னேற்றக் குறிப்பு"],["progressPct","Progress percentage","முன்னேற்ற சதவீதம்"],["myTasksTitle","My Assigned Tasks","என் பணிகள்"],["myTasksSub","Tasks you accepted or that control room assigned to you.","நீங்கள் ஏற்ற அல்லது கட்டுப்பாட்டு அறை உங்களுக்கு ஒதுக்கிய பணிகள்."],
+["noMyTasks","You have no active tasks yet. Pick one from 'Find tasks'.","உங்களுக்குப் பணிகள் இல்லை. பணிகளைத் தேடு பகுதியில் ஒன்றை ஏற்கவும்."],
+["requester","Requested by","கோரியவர்"],["peopleCount","{n} people","{n} பேர்"],["completedTasks","Completed tasks","முடிந்த பணிகள்"],
+["distTitle","Record Aid Distribution","விநியோகித்த வளங்களைப் பதிவு செய்"],["distSub","Log food packets, water, blankets or medical kits distributed to victims.","பாதிக்கப்பட்ட மக்களுக்கு வழங்கிய நிவாரணப் பொருட்களைப் பதிவு செய்யுங்கள்."],
+["linked","Linked task (optional)","இணைந்த பணி (விருப்பம்)"],["noLink","Not linked to a task","பணியுடன் இணைக்கப்படவில்லை"],["quantity","Quantity distributed","வழங்கிய அளவு"],["beneficiaries","Number of people helped","உதவி பெற்ற நபர்கள்"],
+["assistance","Assistance summary / field observations","கள விவரங்கள்"],["assistPh","Describe supplies delivered, medical conditions, or immediate requirements","வழங்கப்பட்ட பொருட்கள், கள நிலைமையை விவரிக்கவும்"],["stockHint","Recorded quantity is automatically deducted from central depot inventory.","இந்த அளவு மத்திய சமூகக் கிடங்கு இருப்பிலிருந்து கழிக்கப்படும்."],
+["recordBtn","Log distribution record","விநியோகத்தைப் பதிவு செய்"],["distHistory","Your field distribution history","உங்கள் கள விநியோக வரலாறு"],["noDist","No distribution logged yet.","இதுவரை பதிவு எதுவும் இல்லை."],["totalHelped","Total people helped","மொத்த உதவி பெற்றோர்"],["totalItems","Total items distributed","வழங்கிய மொத்தப் பொருட்கள்"],["recordedOn","Recorded at","பதிவு செய்த நேரம்"],
+["adminTitle","Control Room Overview","கட்டுப்பாட்டு அறை மேலோட்டம்"],["adminSub","Real-time dashboard for incident verification, triage, and volunteer dispatch.","சம்பவங்களைச் சரிபார்க்கவும் பணிகளை ஒதுக்கவும் நேரடி டாஷ்போர்டு."],
+["byStatus","Requests by status","நிலையின்படி கோரிக்கைகள்"],["byCategory","Requests by aid category","உதவி வகையின்படி கோரிக்கைகள்"],["toVerify","Reports awaiting verification","சரிபார்க்க வேண்டிய புகார்கள்"],["unassignedReq","Unassigned help requests","ஒதுக்கப்படாத கோரிக்கைகள்"],["volunteersN","Active volunteers","தன்னார்வலர்கள்"],["membersN","Registered citizens","பதிவு செய்த மக்கள்"],
+["reportsTitle","Disaster Reports Verification","பேரிடர் புகார்கள் சரிபார்ப்பு"],["reportsSub","Verify citizen incident reports before dispatching teams.","களப் பணிகளைத் தொடங்கும் முன் பொதுமக்களின் புகார்களைச் சரிபார்க்கவும்."],["verifyBtn","Verify report","சரிபார்"],["rejectBtn","Mark unverified","சரிபார்க்கவில்லை"],["reportedBy","Reported by","புகாரளித்தவர்"],
+["requestsTitle","Citizen Assistance Requests","உதவிக் கோரிக்கைகள்"],["requestsSub","Acknowledge incoming requests and dispatch volunteers.","கோரிக்கைகளை ஏற்று தன்னார்வலர்களை ஒதுக்குங்கள்."],["assignVol","Assign volunteer","தன்னார்வலரை ஒதுக்கு"],["unassigned","Unassigned","ஒதுக்கப்படவில்லை"],["setStatus","Set status","நிலையை அமை"],
+["publishAlert","Publish New Emergency Alert","புதிய அவசர எச்சரிக்கையை வெளியிடு"],["titleEn","Alert title (English)","தலைப்பு (ஆங்கிலம்)"],["titleTa","Alert title (Tamil)","தலைப்பு (தமிழ்)"],["msgEn","Alert message (English)","செய்தி (ஆங்கிலம்)"],["msgTa","Alert message (Tamil)","செய்தி (தமிழ்)"],["fallbackHint","Tip: Leave Tamil fields blank to reuse English text automatically.","குறிப்பு: தமிழ்ப் பகுதியை காலியாக விட்டால் ஆங்கில உரை பயன்படுத்தப்படும்."],
+["alertLevel","Severity level","தீவிர நிலை"],["publishBtn","Broadcast alert","எச்சரிக்கையை வெளியிடு"],["withdraw","Withdraw alert","திரும்பப் பெறு"],["activeAlerts","Active broadcasts","செயலில் உள்ள எச்சரிக்கைகள்"],
+["addShelter","Add New Shelter","புதிய முகாமைச் சேர்"],["shelterName","Shelter facility name","முகாம் பெயர்"],["capacityL","Total bed capacity","மொத்தக் கொள்ளளவு"],["occupied","Currently occupied","தற்போது தங்கியுள்ளோர்"],["updateBtn","Update","புதுப்பி"],["addBtn","Save & Add","சேர்"],["facilities","Available facilities","வசதிகள்"],["openClosed","Operating status","இயங்கும் நிலை"],
+["addResource","Add Community Resource","வளத்தைச் சேர்"],["resourceName","Resource item name","வளத்தின் பெயர்"],["unit","Measuring unit","அலகு"],["unitPh","e.g., bottles, meal packets, kits","எ.கா: பாட்டில்கள், பொட்டலங்கள், உடைகள்"],["stockL","Available in stock","இருப்பு"],["totalL","Total capacity","மொத்தம்"],
+["peopleTitle","Community & Volunteer Directory","நபர்கள் அடைவு"],["colName","Full Name","பெயர்"],["colRole","Role","பங்கு"],["colArea","Zone & Skills","பகுதி மற்றும் திறன்கள்"],["colJoined","Registration Date","சேர்ந்த தேதி"],
+["resetDemo","Reset Demo Data","டெமோ தரவை மீட்டமை"],["confirmReset","Are you sure you want to restore default seed demo data?","டெமோ தரவை மீட்டமைக்கவா?"],["reset","Reset Now","மீட்டமை"],
+["n.status","Your {cat} request status changed to {status}.","உங்கள் {cat} கோரிக்கை நிலை {status} என மாற்றப்பட்டது."],["n.verified","Your disaster report at {loc} has been verified by control room.","{loc} இடத்தில் உங்கள் புகார் கட்டுப்பாட்டு அறையால் சரிபார்க்கப்பட்டது."],["n.rejected","Your disaster report at {loc} could not be verified.","{loc} இடத்தில் உங்கள் புகார் சரிபார்க்கப்படவில்லை."],["n.assignedYou","New task assigned to you: {cat} at {loc}.","உங்களுக்குப் புதிய பணி ஒதுக்கப்பட்டது: {loc} இடத்தில் {cat}."],["n.volunteer","A volunteer ({name}) has been dispatched for your {cat} request.","உங்கள் {cat} கோரிக்கைக்கு தன்னார்வலர் {name} புறப்பட்டுள்ளார்."],
+["justNow","just now","இப்போதுதான்"],
+["noticeTitle","Sample Demonstration Mode","மாதிரி செயல்விளக்க முறை"],
+["noticeBody","This platform uses local browser storage for testing. In case of actual disaster, dial 112.","இந்த தளம் சோதனைக்காக உள்ளூர் உலாவியில் இயங்குகிறது. உண்மையான பேரிடர் காலத்தில் 112 ஐ அழைக்கவும்."]
+];
+var T={en:{},ta:{}};L.forEach(function(r){T.en[r[0]]=r[1];T.ta[r[0]]=r[2];});
+
+/* ---------- local storage persistence ---------- */
+var mem={};
+var ls={
+  get:function(k){try{var v=localStorage.getItem(k);if(v!==null)return JSON.parse(v);}catch(e){}return mem[k]===undefined?null:mem[k];},
+  set:function(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}},
+  del:function(k){delete mem[k];try{localStorage.removeItem(k);}catch(e){}}
+};
+var DBK='nammarescue_db_v2';
+var lang=ls.get('nammarescue_lang')==='ta'?'ta':'en';
+var ui={bell:false,menu:false,photo:null,sim:false,shelterQ:'',f:{loc:'',urg:'',type:'',cat:'',mine:false}};
+
+/* ---------- helpers ---------- */
+function t(k,v){var s=(T[lang]&&T[lang][k])||T.en[k]||k;if(v)s=s.replace(/\{(\w+)\}/g,function(m,n){return v[n]===undefined?'':v[n];});return s;}
+function esc(s){return String(s===undefined||s===null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function uid(p){return p+Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4);}
+function iso(offsetMin){return new Date(Date.now()+(offsetMin||0)*60000).toISOString();}
+function ic(n,c){return '<svg class="ic '+(c||'')+'" aria-hidden="true" focusable="false"><use href="#i-'+n+'"/></svg>';}
+function loc(){return lang==='ta'?'ta-IN':'en-IN';}
+function fmtDate(s,time){try{return new Date(s).toLocaleString(loc(),time?{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}:{day:'numeric',month:'short',year:'numeric'});}catch(e){return String(s).slice(0,10);}}
+function fmtNum(n){try{return Number(n).toLocaleString('en-IN');}catch(e){return n;}}
+function ago(s){try{var d=(new Date(s)-Date.now())/1000,a=Math.abs(d),rtf=new Intl.RelativeTimeFormat(loc(),{numeric:'auto'});if(a<60)return t('justNow');if(a<3600)return rtf.format(Math.round(d/60),'minute');if(a<86400)return rtf.format(Math.round(d/3600),'hour');return rtf.format(Math.round(d/86400),'day');}catch(e){return fmtDate(s);}}
+function todayStr(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);}
+function L2(o,f){return (lang==='ta'&&o[f+'Ta'])||o[f+'En']||o[f+'Ta']||'';}
+function sk(s){return String(s).replace(/\s/g,'');}
+function $(s,r){return (r||document).querySelector(s);}
+function initials(n){return String(n||'?').trim().split(/\s+/).slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();}
+function opts(list,sel,labelFn){return list.map(function(x){return '<option value="'+esc(x)+'"'+(x===sel?' selected':'')+'>'+esc(labelFn(x))+'</option>';}).join('');}
+
+var TYPES=['flood','cyclone','fire','earthquake','landslide','heatwave','tsunami','other'];
+var SEV=['low','medium','high','critical'];
+var CATS=['food','water','clothing','medicine','rescue'];
+var STATUS=['Pending','Acknowledged','In Progress','Resolved'];
+var SKILLS=['firstaid','rescue','medical','logistics','cooking','counselling','driving','translation'];
+var AVAIL=['anytime','weekdays','weekends','evenings'];
+var FACS=['water','food','medical','power','beds'];
+var CATIC={food:'utensils',water:'droplet',clothing:'shirt',medicine:'pill',rescue:'buoy'};
+var FACIC={water:'droplet',food:'utensils',medical:'pill',power:'zap',beds:'bed'};
+var SEVRANK={critical:0,high:1,medium:2,low:3};
+
+/* ---------- seed default demonstration data ---------- */
+function seed(){
+  var now=Date.now();
+  function ago2(m){return new Date(now-m*60000).toISOString();}
+  var users=[
+    {id:'u_admin',name:'Control Room Admin',email:'admin@nammarescue.in',phone:'90000 00001',password:'Admin@123',role:'admin',createdAt:ago2(9000)},
+    {id:'u_user',name:'Priya Raman',email:'user@nammarescue.in',phone:'90000 00002',password:'User@123',role:'user',createdAt:ago2(8000)},
+    {id:'u_vol',name:'Karthik S',email:'volunteer@nammarescue.in',phone:'90000 00003',password:'Volunteer@123',role:'volunteer',createdAt:ago2(7000),
+      profile:{skills:['firstaid','logistics','driving'],area:'Ambattur, Avadi',availability:'weekends'}}
+  ];
+  var requests=[
+    {id:'q1',userId:'u_user',userName:'Priya Raman',category:'food',people:4,location:'Lakshmi Nagar, Ambattur',urgency:'high',disasterType:'flood',description:'Ground floor is flooded. Family is on the first floor and needs cooked food.',status:'Pending',assignedTo:null,assignedName:null,progress:0,updates:[{at:ago2(180),type:'created'}],createdAt:ago2(180),updatedAt:ago2(180)},
+    {id:'q2',userId:'u_user',userName:'Priya Raman',category:'water',people:6,location:'Lakshmi Nagar, Ambattur',urgency:'medium',disasterType:'flood',description:'Tap water is muddy and unusable. We need 10L clean drinking water for children.',status:'Acknowledged',assignedTo:'u_vol',assignedName:'Karthik S',progress:0,updates:[{at:ago2(300),type:'created'},{at:ago2(240),type:'status',status:'Acknowledged',by:'Karthik S'}],createdAt:ago2(300),updatedAt:ago2(240)},
+    {id:'q3',userId:'u_seed1',userName:'Meena Kumar',category:'medicine',people:1,location:'Pattabiram, Avadi',urgency:'critical',disasterType:'flood',description:'Elderly resident needs insulin and blood pressure tablets. Local pharmacy is cut off by water.',status:'In Progress',assignedTo:'u_vol',assignedName:'Karthik S',progress:40,updates:[{at:ago2(400),type:'created'},{at:ago2(360),type:'status',status:'Acknowledged',by:'Karthik S'},{at:ago2(120),type:'note',note:'Medicines collected from camp depot. En route by emergency auto.',pct:40,by:'Karthik S'}],createdAt:ago2(400),updatedAt:ago2(120)},
+    {id:'q4',userId:'u_seed2',userName:'Arun Prasad',category:'rescue',people:2,location:'Perambur Barracks Road',urgency:'critical',disasterType:'flood',description:'Two people stranded on rooftop with water level rising past 4 feet. Need inflatable raft or boat.',status:'Pending',assignedTo:null,assignedName:null,progress:0,updates:[{at:ago2(40),type:'created'}],createdAt:ago2(40),updatedAt:ago2(40)},
+    {id:'q5',userId:'u_seed3',userName:'Lakshmi N',category:'clothing',people:5,location:'Anna Nagar West',urgency:'low',disasterType:'cyclone',description:'Dry clothes and warm blankets for 3 children after the storm damaged tiles.',status:'Resolved',assignedTo:'u_vol',assignedName:'Karthik S',progress:100,updates:[{at:ago2(1500),type:'created'},{at:ago2(1400),type:'status',status:'Acknowledged',by:'Karthik S'},{at:ago2(1200),type:'status',status:'Resolved',by:'Karthik S'}],createdAt:ago2(1500),updatedAt:ago2(1200)}
+  ];
+  var reports=[
+    {id:'p1',userId:'u_user',userName:'Priya Raman',type:'flood',location:'Lakshmi Nagar Main Road, Ambattur',description:'Water level is above knee height on the main street. Storm water drain overflowing.',date:todayStr(),severity:'high',photo:null,status:'verified',createdAt:ago2(200)},
+    {id:'p2',userId:'u_seed1',userName:'Meena Kumar',type:'fire',location:'Avadi Bus Terminus Road',description:'Electrical transformer sparking and fire near the depot gate. Fire tender requested.',date:todayStr(),severity:'critical',photo:null,status:'pending',createdAt:ago2(25)},
+    {id:'p3',userId:'u_seed2',userName:'Arun Prasad',type:'other',location:'Mogappair East 3rd Block',description:'Large gulmohar tree has fallen across road blocking ambulance passage.',date:todayStr(),severity:'medium',photo:null,status:'pending',createdAt:ago2(70)}
+  ];
+  var alerts=[
+    {id:'a1',level:'warning',titleEn:'[Sample Alert] Heavy rainfall warning for Chennai & Chengalpattu',titleTa:'[மாதிரி எச்சரிக்கை] சென்னை மற்றும் செங்கல்பட்டுக்கு கனமழை எச்சரிக்கை',bodyEn:'Meteorological bulletin: heavy to very heavy rainfall expected. Keep emergency phone charged, avoid low-lying subways.',bodyTa:'வானிலை அறிக்கை: மிகக் கனமழை பெய்யக்கூடும். அவசர தொலைபேசியை சார்ஜ் செய்து வைக்கவும், சுரங்கப்பாதைகளைத் தவிர்க்கவும்.',areaEn:'Chennai, Tiruvallur, Chengalpattu',areaTa:'சென்னை, திருவள்ளூர், செங்கல்பட்டு',issuedAt:ago2(90)},
+    {id:'a2',level:'watch',titleEn:'[Sample Alert] Waterlogging reported near Ambattur Industrial Estate',titleTa:'[மாதிரி எச்சரிக்கை] அம்பத்தூர் தொழிற்பேட்டை அருகே நீர் தேக்கம்',bodyEn:'Traffic diverted near 3rd Main Road. Light motor vehicles use alternate route via Mogappair.',bodyTa:'3-வது பிரதான சாலையில் போக்குவரத்து மாற்றம். மொகப்பேர் வழியாக மாற்றுப் பாதையைப் பயன்படுத்தவும்.',areaEn:'Ambattur Zone',areaTa:'அம்பத்தூர் மண்டலம்',issuedAt:ago2(150)},
+    {id:'a3',level:'info',titleEn:'[Sample Alert] 4 Relief shelters operational with hot meals and beds',titleTa:'[மாதிரி எச்சரிக்கை] 4 நிவாரண முகாம்கள் திறக்கப்பட்டுள்ளன',bodyEn:'Dry rations, clean drinking water, and paramedical teams stationed at each centre.',bodyTa:'உணவு, சுத்தமான குடிநீர் மற்றும் முதலுதவி குழுக்கள் முகாம்களில் தயார் நிலையில் உள்ளன.',areaEn:'Avadi, Ambattur, Perambur, Anna Nagar',areaTa:'ஆவடி, அம்பத்தூர், பெரம்பூர், அண்ணா நகர்',issuedAt:ago2(260)}
+  ];
+  var shelters=[
+    {id:'s1',nameEn:'Ambattur Community Hall (Sample)',nameTa:'அம்பத்தூர் சமுதாயக் கூடம் (மாதிரி)',areaEn:'Ambattur',areaTa:'அம்பத்தூர்',capacity:220,occupied:148,facilities:['water','food','medical','power','beds'],contact:'044-26580001',status:'open'},
+    {id:'s2',nameEn:'Avadi Relief Centre (Sample)',nameTa:'ஆவடி நிவாரண மையம் (மாதிரி)',areaEn:'Avadi',areaTa:'ஆவடி',capacity:300,occupied:291,facilities:['water','food','beds'],contact:'044-26380002',status:'open'},
+    {id:'s3',nameEn:'Perambur Government Higher Secondary School (Sample)',nameTa:'பெரம்பூர் அரசு மேல்நிலைப் பள்ளி (மாதிரி)',areaEn:'Perambur',areaTa:'பெரம்பூர்',capacity:180,occupied:60,facilities:['water','food','medical','beds'],contact:'044-25510003',status:'open'},
+    {id:'s4',nameEn:'Anna Nagar Marriage Hall (Sample)',nameTa:'அண்ணா நகர் திருமண மண்டபம் (மாதிரி)',areaEn:'Anna Nagar',areaTa:'அண்ணா நகர்',capacity:150,occupied:150,facilities:['water','food','power'],contact:'044-26210004',status:'open'}
+  ];
+  var resources=[
+    {id:'r1',category:'water',nameEn:'Drinking water (1L sealed bottles)',nameTa:'குடிநீர் (1 லிட்டர் பாட்டில்கள்)',unitEn:'bottles',unitTa:'பாட்டில்கள்',stock:4200,total:6000,locationEn:'Ambattur Community Depot',locationTa:'அம்பத்தூர் சமூகக் கிடங்கு'},
+    {id:'r2',category:'food',nameEn:'Freshly cooked meal packets',nameTa:'சமைத்த உணவுப் பொட்டலங்கள்',unitEn:'packets',unitTa:'பொட்டலங்கள்',stock:1350,total:2500,locationEn:'Avadi Central Kitchen',locationTa:'ஆவடி சமையலறை'},
+    {id:'r3',category:'clothing',nameEn:'Blankets & dry clothing kits',nameTa:'போர்வை மற்றும் உடைத் தொகுப்புகள்',unitEn:'kits',unitTa:'தொகுப்புகள்',stock:620,total:1000,locationEn:'Perambur Municipal Store',locationTa:'பெரம்பூர் கிடங்கு'},
+    {id:'r4',category:'medicine',nameEn:'First-aid and anti-infection kits',nameTa:'முதலுதவி மற்றும் மருந்துத் தொகுப்புகள்',unitEn:'kits',unitTa:'தொகுப்புகள்',stock:85,total:400,locationEn:'Ambattur Camp Pharmacy',locationTa:'அம்பத்தூர் மருந்தகம்'},
+    {id:'r5',category:'rescue',nameEn:'Inflatable rescue boats',nameTa:'மீட்புப் படகுகள்',unitEn:'boats',unitTa:'படகுகள்',stock:6,total:12,locationEn:'Corporation Rescue Yard',locationTa:'மாநகராட்சி மீட்பு முற்றம்'},
+    {id:'r6',category:'rescue',nameEn:'Life jackets & safety ropes',nameTa:'உயிர்காப்பு உடைகள் மற்றும் கயிறுகள்',unitEn:'jackets',unitTa:'உடைகள்',stock:140,total:200,locationEn:'Corporation Rescue Yard',locationTa:'மாநகராட்சி மீட்பு முற்றம்'}
+  ];
+  var distributions=[
+    {id:'d1',volId:'u_vol',volName:'Karthik S',requestId:'q5',category:'clothing',quantity:5,beneficiaries:5,notes:'Delivered 5 woolen blankets and clothing bundles to the family.',createdAt:ago2(1200)}
+  ];
+  return {users:users,requests:requests,reports:reports,alerts:alerts,shelters:shelters,resources:resources,distributions:distributions,notifications:[],offline:[]};
+}
+var db=ls.get(DBK)||seed();
+var warnedStorage=false;
+function save(){
+  if(!ls.set(DBK,db)&&!warnedStorage){
+    warnedStorage=true;
+    toast(t('toast.storage'),'warn');
+  }
+}
+save();
+
+/* ---------- session management ---------- */
+function me(){var id=ls.get('nammarescue_session');return db.users.filter(function(u){return u.id===id;})[0]||null;}
+function isOffline(){return ui.sim||navigator.onLine===false;}
+
+/* ---------- toasts and modal dialog ---------- */
+function toast(msg,type){
+  var el=document.createElement('div');el.className='toast '+(type||'');
+  el.innerHTML=ic(type==='warn'||type==='err'?'alert':'check')+'<span>'+esc(msg)+'</span>';
+  $('#toasts').appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.remove();},4500);
+}
+function openDlg(html){
+  $('#dlg-body').innerHTML=html;
+  var d=$('#dlg');
+  if(!d.open){if(d.showModal)d.showModal();else d.setAttribute('open','');}
+}
+function closeDlg(){
+  var d=$('#dlg');
+  if(d.open){if(d.close)d.close();else d.removeAttribute('open');}
+}
+
+/* ---------- notifications ---------- */
+function notify(userId,key,vars){
+  if(!userId)return;
+  db.notifications.unshift({id:uid('n_'),userId:userId,key:key,vars:vars||{},createdAt:iso(),read:false});
+}
+function notifText(n){
+  var v={};
+  for(var k in n.vars){v[k]=n.vars[k];}
+  if(v.cat)v.cat=t('cat.'+v.cat);
+  if(v.status)v.status=t('st.'+sk(v.status));
+  return t(n.key,v);
+}
+
+/* ---------- domain logic ---------- */
+function activeAlerts(){return db.alerts.slice().sort(function(a,b){return new Date(b.issuedAt)-new Date(a.issuedAt);});}
+function addReport(p,u,at){
+  db.reports.unshift({
+    id:uid('p_'),
+    userId:u.id,
+    userName:u.name,
+    type:p.type,
+    location:p.location,
+    description:p.description,
+    date:p.date,
+    severity:p.severity,
+    photo:p.photo||null,
+    status:'pending',
+    createdAt:at||iso()
+  });
+  save();
+}
+function addRequest(p,u,at){
+  var now=at||iso();
+  db.requests.unshift({
+    id:uid('q_'),
+    userId:u.id,
+    userName:u.name,
+    category:p.category,
+    people:p.people,
+    location:p.location,
+    urgency:p.urgency,
+    disasterType:p.disasterType,
+    description:p.description,
+    status:'Pending',
+    assignedTo:null,
+    assignedName:null,
+    progress:0,
+    updates:[{at:now,type:'created'}],
+    createdAt:now,
+    updatedAt:now
+  });
+  save();
+}
+function queueOffline(kind,p,u){
+  db.offline.unshift({id:uid('o_'),kind:kind,userId:u.id,userName:u.name,payload:p,createdAt:iso(),status:'queued',syncedAt:null});
+  save();
+}
+function syncOffline(auto){
+  var u=me();if(!u)return;
+  var items=db.offline.filter(function(o){return o.userId===u.id&&o.status==='queued';});
+  if(!items.length){if(!auto)toast(t('toast.nothingSync'),'warn');return;}
+  if(isOffline()){toast(t('offlineBanner'),'warn');return;}
+  items.slice().reverse().forEach(function(o){
+    if(o.kind==='report')addReport(o.payload,{id:o.userId,name:o.userName},o.createdAt);
+    else addRequest(o.payload,{id:o.userId,name:o.userName},o.createdAt);
+    o.status='synced';
+    o.syncedAt=iso();
+  });
+  save();
+  toast(t('toast.synced',{n:items.length}));
+  render();
+}
+function logUpdate(q,e){e.at=iso();q.updates.push(e);q.updatedAt=e.at;}
+function setStatus(q,status,byName){
+  q.status=status;
+  if(status==='Resolved')q.progress=100;
+  logUpdate(q,{type:'status',status:status,by:byName});
+  notify(q.userId,'n.status',{cat:q.category,status:status});
+}
+function reqById(id){return db.requests.filter(function(x){return x.id===id;})[0];}
+
+/* ---------- geolocation helper (Graceful permission handling) ---------- */
+function acquireGPS(targetInputId, btnEl){
+  if(!navigator.geolocation){
+    toast(t('gpsNotSupp'),'warn');
+    return;
+  }
+  var origText=btnEl.innerHTML;
+  btnEl.disabled=true;
+  btnEl.innerHTML=ic('compass')+' '+esc(t('detectingGPS'));
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      btnEl.disabled=false;
+      btnEl.innerHTML=origText;
+      var lat=pos.coords.latitude.toFixed(4);
+      var lng=pos.coords.longitude.toFixed(4);
+      var acc=Math.round(pos.coords.accuracy);
+      var input=$('#'+targetInputId);
+      if(input){
+        var prefix=input.value.trim()?input.value.trim()+' | ':'';
+        input.value=prefix+'GPS: '+lat+', '+lng+' (±'+acc+'m)';
+      }
+      toast(t('gpsSuccess')+' ('+lat+', '+lng+')');
+    },
+    function(err){
+      btnEl.disabled=false;
+      btnEl.innerHTML=origText;
+      var msg=t('gpsDenied');
+      if(err.code===1)msg=t('gpsDenied');
+      toast(msg,'warn');
+    },
+    {enableHighAccuracy:true,timeout:9000,maximumAge:30000}
+  );
+}
+
+/* ---------- UI component builders ---------- */
+function badge(c,txt){return '<span class="badge '+c+'">'+txt+'</span>';}
+function stBadge(s){return badge('st-'+sk(s),esc(t('st.'+sk(s))));}
+function sevBadge(s){return badge('sev-'+s,esc(t('sev.'+s)));}
+function sampleBadge(){return badge('badge-sample','⚠️ '+esc(t('sampleBadge')));}
+function stepper(s){
+  if(s==='Cancelled')return '';
+  var i=STATUS.indexOf(s);
+  return '<ol class="stepper" aria-label="'+esc(t('status'))+'">'+STATUS.map(function(x,k){
+    return '<li class="'+(k<i?'done':k===i?'now':'')+'"'+(k===i?' aria-current="step"':'')+'><span class="dot"></span><span>'+esc(t('st.'+sk(x)))+'</span></li>';
+  }).join('')+'</ol>';
+}
+function updatesHtml(q){
+  if(!q.updates||!q.updates.length)return '';
+  var rows=q.updates.slice().reverse().map(function(u){
+    var txt=u.type==='created'?t('upd.created'):u.type==='status'?t('upd.status',{status:t('st.'+sk(u.status))}):u.type==='assign'?t('upd.assigned',{name:u.name}):(esc(u.note||'')||t('upd.progress',{pct:u.pct}));
+    if(u.type==='note'&&u.note)txt=esc(u.note)+' ('+t('upd.progress',{pct:u.pct})+')';
+    return '<li><span>'+(u.type==='created'||u.type==='status'||u.type==='assign'?esc(txt):txt)+'</span><time>'+esc(fmtDate(u.at,true))+'</time></li>';
+  }).join('');
+  return '<ul class="updates" aria-label="'+esc(t('updates'))+'">'+rows+'</ul>';
+}
+function shelterCard(s){
+  var free=Math.max(0,s.capacity-s.occupied),st=s.status==='closed'?'closed':free===0?'full':'open',pct=Math.min(100,Math.round(s.occupied/Math.max(1,s.capacity)*100));
+  return '<article class="card"><div class="item-top"><div><div class="row" style="margin-bottom:.2rem"><h3>'+esc(L2(s,'name'))+'</h3>'+sampleBadge()+'</div></div>'+badge('sh-'+st,esc(t('shelter.'+st)))+'</div>'+
+    '<p class="muted" style="margin:.2rem 0 .7rem">'+ic('pin')+' '+esc(L2(s,'area'))+'</p>'+
+    '<div class="meter" role="img" aria-label="'+esc(t('freeOf',{free:free,cap:s.capacity}))+'"><span class="'+(pct>90?'hot':'')+'" style="width:'+pct+'%"></span></div>'+
+    '<p class="small" style="margin:.4rem 0 .7rem"><strong>'+esc(t('freeOf',{free:fmtNum(free),cap:fmtNum(s.capacity)}))+'</strong></p>'+
+    '<div class="chips">'+s.facilities.map(function(f){return '<span class="chip">'+ic(FACIC[f])+' '+esc(t('fac.'+f))+'</span>';}).join('')+'</div>'+
+    (s.contact?'<p class="small" style="margin:.8rem 0 0">'+ic('phone')+' <a href="tel:'+esc(s.contact.replace(/\s/g,''))+'">'+esc(s.contact)+'</a></p>':'')+'</article>';
+}
+function sortedShelters(q){
+  var list=db.shelters.slice().sort(function(a,b){return (b.capacity-b.occupied)-(a.capacity-a.occupied);});
+  if(q){q=q.toLowerCase();list=list.filter(function(s){return (s.nameEn+' '+s.nameTa+' '+s.areaEn+' '+s.areaTa).toLowerCase().indexOf(q)>-1;});}
+  return list;
+}
+function shelterListHtml(q){
+  var l=sortedShelters(q);
+  return l.length?l.map(shelterCard).join(''):'<div class="empty" style="grid-column:1/-1">'+ic('home')+'<p>'+esc(t('noShelters'))+'</p></div>';
+}
+function resourceRow(r){
+  var pct=Math.round(r.stock/Math.max(1,r.total)*100),low=pct<25;
+  return '<div class="res"><div class="res-h">'+ic(CATIC[r.category])+'<div><strong>'+esc(L2(r,'name'))+'</strong><span class="muted small">'+esc(t('storedAt'))+': '+esc(L2(r,'location'))+'</span></div>'+
+    '<div class="res-n"><strong>'+fmtNum(r.stock)+'</strong> <span class="muted">'+esc(t('of'))+' '+fmtNum(r.total)+' '+esc(L2(r,'unit'))+'</span></div></div>'+
+    '<div class="meter '+(low?'low':'')+'" role="img" aria-label="'+pct+'%"><span style="width:'+pct+'%"></span></div>'+(low?'<div style="margin-top:.4rem">'+badge('sev-high',esc(t('lowStock')))+'</div>':'')+'</div>';
+}
+function alertCard(a,withActions){
+  return '<article class="card item"><div class="item-top"><div><div class="row" style="margin-bottom:.2rem"><h3>'+esc(L2(a,'title'))+'</h3>'+sampleBadge()+'</div></div><div class="row">'+badge('lv-'+a.level,esc(t('lv.'+a.level)))+badge('rs-verified',ic('shield')+' '+esc(t('verifiedAlert')))+'</div></div>'+
+    '<p style="margin:.5rem 0">'+esc(L2(a,'body'))+'</p><div class="meta"><span>'+ic('pin')+' '+esc(L2(a,'area'))+'</span><span>'+ic('clock')+' '+esc(t('issued'))+' '+esc(ago(a.issuedAt))+'</span></div>'+
+    (withActions?'<div class="actions-row"><button class="btn danger sm" data-act="alert-withdraw" data-id="'+a.id+'">'+ic('trash')+' '+esc(t('withdraw'))+'</button></div>':'')+'</article>';
+}
+function emptyBox(icon,msg,cta){return '<div class="empty">'+ic(icon)+'<p>'+esc(msg)+'</p>'+(cta||'')+'</div>';}
+function pageHead(title,sub){return '<div class="page-head"><h1 style="font-size:clamp(1.5rem,3vw,2rem)">'+esc(title)+'</h1>'+(sub?'<p>'+esc(sub)+'</p>':'')+'</div>';}
+function statCard(n,label){return '<div class="stat"><b>'+n+'</b><span>'+esc(label)+'</span></div>';}
+function reportCard(p,admin){
+  return '<article class="card item"><div class="item-top"><h3>'+esc(t('type.'+p.type))+' - '+esc(p.location)+'</h3><div class="row">'+sevBadge(p.severity)+badge('rs-'+p.status,esc(t('rs.'+p.status)))+'</div></div>'+
+    '<p style="margin:.5rem 0">'+esc(p.description)+'</p><div class="meta"><span>'+ic('clock')+' '+esc(fmtDate(p.date))+'</span>'+(admin?'<span>'+ic('user')+' '+esc(t('reportedBy'))+' '+esc(p.userName)+'</span>':'')+'</div>'+
+    (p.photo?'<img class="thumb" src="'+p.photo+'" alt="Incident attachment">':'')+
+    (admin&&p.status==='pending'?'<div class="actions-row"><button class="btn sm" data-act="rep-verify" data-id="'+p.id+'">'+ic('check')+' '+esc(t('verifyBtn'))+'</button><button class="btn ghost sm" data-act="rep-reject" data-id="'+p.id+'">'+ic('x')+' '+esc(t('rejectBtn'))+'</button></div>':'')+'</article>';
+}
+function requestCard(q,mode){
+  var canEdit=mode==='user'&&q.status==='Pending';
+  return '<article class="card item"><div class="item-top"><div class="row"><span style="color:var(--teal-ink)">'+ic(CATIC[q.category])+'</span><h3>'+esc(t('cat.'+q.category))+' <span class="muted" style="font-weight:500">('+esc(t('peopleCount',{n:q.people}))+')</span></h3></div><div class="row">'+sevBadge(q.urgency)+stBadge(q.status)+'</div></div>'+
+    '<div class="meta"><span>'+ic('pin')+' '+esc(q.location)+'</span><span>'+esc(t('type.'+q.disasterType))+'</span>'+(mode!=='user'?'<span>'+ic('user')+' '+esc(t('requester'))+' '+esc(q.userName)+'</span>':'')+'<span>'+ic('clock')+' '+esc(ago(q.createdAt))+'</span></div>'+
+    '<p style="margin:.3rem 0 0">'+esc(q.description)+'</p>'+
+    (q.assignedName?'<p class="small muted" style="margin:.6rem 0 0">'+ic('users')+' '+esc(t('assignedTo'))+': <strong>'+esc(q.assignedName)+'</strong></p>':'')+
+    (mode==='user'||mode==='mine'?stepper(q.status):'')+
+    (q.progress>0&&q.status==='In Progress'?'<div class="meter" role="img" aria-label="'+q.progress+'%"><span style="width:'+q.progress+'%"></span></div>':'')+
+    (mode==='user'||mode==='mine'?updatesHtml(q):'')+
+    (canEdit?'<div class="actions-row"><button class="btn ghost sm" data-act="req-edit" data-id="'+q.id+'">'+ic('edit')+' '+esc(t('edit'))+'</button><button class="btn danger sm" data-act="req-cancel" data-id="'+q.id+'">'+ic('x')+' '+esc(t('cancelRequest'))+'</button></div>':'')+
+    '</article>';
+}
+
+/* ---------- header / footer ---------- */
+function route(){var h=location.hash.replace(/^#\/?/,'');var p=h.split('/');return {page:p[0]||'home',sub:p[1]||''};}
+function headerHtml(r){
+  var u=me(),links=[['','nav.home'],['alerts','nav.alerts'],['shelters','nav.shelters'],['resources','nav.resources']];
+  var nav=links.map(function(l){return '<a class="nl" href="#/'+l[0]+'"'+(r.page===(l[0]||'home')?' aria-current="page"':'')+'>'+esc(t(l[1]))+'</a>';}).join('');
+  if(u)nav+='<a class="nl" href="#/dashboard"'+(r.page==='dashboard'?' aria-current="page"':'')+'>'+esc(t('nav.dashboard'))+'</a>';
+  var unread=u?db.notifications.filter(function(n){return n.userId===u.id&&!n.read;}).length:0;
+  var mine=u?db.notifications.filter(function(n){return n.userId===u.id;}).slice(0,12):[];
+  return '<div class="container hdr-in"><a class="brand" href="#/"><span class="brand-mark">'+ic('buoy')+'</span><span><b>'+esc(t('brand'))+'</b><small>'+esc(t('tagline'))+'</small></span></a>'+
+    '<nav class="nav'+(ui.menu?' open':'')+'" id="nav" aria-label="'+esc(t('menu'))+'">'+nav+'</nav>'+
+    '<div class="hdr-tools">'+
+    (isOffline()?'<a class="pill-off" href="#/dashboard/offline" title="Stored offline">'+ic('wifioff')+' '+esc(t('offlineTag'))+'</a>':'')+
+    '<div class="seg" role="group" aria-label="'+esc(t('langLabel'))+'"><button data-act="lang" data-lang="en" aria-pressed="'+(lang==='en')+'" lang="en">English</button><button data-act="lang" data-lang="ta" aria-pressed="'+(lang==='ta')+'" lang="ta">தமிழ்</button></div>'+
+    (u?'<div class="bell-wrap"><button class="icon-btn" data-act="bell" aria-label="'+esc(t('bell'))+'" aria-expanded="'+ui.bell+'">'+ic('bell')+(unread?'<span class="cnt">'+unread+'</span>':'')+'</button>'+
+      (ui.bell?'<div class="drop"><div class="row between" style="margin-bottom:.4rem"><strong>'+esc(t('bell'))+'</strong><button class="btn ghost sm" data-act="read-all">'+esc(t('markRead'))+'</button></div>'+
+        (mine.length?'<ul>'+mine.map(function(n){return '<li class="'+(n.read?'':'unread')+'">'+esc(notifText(n))+'<small>'+esc(ago(n.createdAt))+'</small></li>';}).join('')+'</ul>':'<p class="muted small">'+esc(t('noNotif'))+'</p>')+'</div>':'')+'</div>':'')+
+    (u?'<button class="btn light sm hide-s" data-act="logout">'+ic('logout')+' '+esc(t('logout'))+'</button>':'<a class="btn outline-w sm" href="#/login">'+esc(t('login'))+'</a><a class="btn light sm hide-s" href="#/register">'+esc(t('register'))+'</a>')+
+    '<button class="menu-btn" data-act="menu" aria-label="'+esc(t('menu'))+'" aria-expanded="'+ui.menu+'" aria-controls="nav">'+ic(ui.menu?'x':'menu')+'</button></div></div>';
+}
+function footerHtml(){
+  return '<div class="container"><div class="ftr-grid"><div><div class="brand" style="margin-bottom:.6rem"><span class="brand-mark">'+ic('buoy')+'</span><span><b>'+esc(t('brand'))+'</b></span></div><p>'+esc(t('footAbout'))+'</p></div>'+
+    '<div><h4>'+esc(t('footLinks'))+'</h4><ul><li><a href="#/alerts">'+esc(t('nav.alerts'))+'</a></li><li><a href="#/shelters">'+esc(t('nav.shelters'))+'</a></li><li><a href="#/resources">'+esc(t('nav.resources'))+'</a></li><li><a href="#/register">'+esc(t('register'))+'</a></li></ul></div>'+
+    '<div><h4>'+esc(t('footHelp'))+'</h4><ul><li>'+ic('phone')+' '+esc(t('helpline'))+': <a href="tel:112"><strong>112</strong></a></li><li>'+ic('phone')+' '+esc(t('stateHelpline'))+'</li></ul></div></div>'+
+    '<div class="fine row between"><span>'+esc(t('footSample'))+'</span><button class="btn outline-w sm" data-act="reset-demo">'+ic('refresh')+' '+esc(t('resetDemo'))+'</button></div></div>';
+}
+
+/* ---------- public view pages ---------- */
+function viewHome(){
+  var top=activeAlerts()[0];
+  var open=db.requests.filter(function(q){return q.status!=='Resolved'&&q.status!=='Cancelled';}).length;
+  var done=db.requests.filter(function(q){return q.status==='Resolved';}).length;
+  var vols=db.users.filter(function(u){return u.role==='volunteer';}).length;
+  var beds=db.shelters.reduce(function(a,s){return a+(s.status==='closed'?0:Math.max(0,s.capacity-s.occupied));},0);
+  var banner=top?'<div class="banner" role="region" aria-label="'+esc(t('verifiedAlert'))+'"><div class="container banner-in">'+ic('alert')+'<strong>'+esc(t('verifiedAlert'))+'</strong><span class="txt">'+esc(L2(top,'title'))+' ('+esc(L2(top,'area'))+')</span><a href="#/alerts">'+esc(t('viewAlerts'))+'</a></div></div>':'';
+  var ripples='<svg class="ripples" viewBox="0 0 600 600" aria-hidden="true"><g fill="none" stroke="#2BC4BE" stroke-opacity=".22" stroke-width="1.5"><circle cx="300" cy="300" r="60"/><circle cx="300" cy="300" r="120"/><circle cx="300" cy="300" r="180"/><circle cx="300" cy="300" r="240"/><circle cx="300" cy="300" r="295"/></g></svg>';
+  var board='<aside class="board" aria-label="'+esc(t('boardTitle'))+'"><h2><span class="live"></span>'+esc(t('boardTitle'))+' '+sampleBadge()+'</h2>'+
+    (top?'<h3>'+esc(t('boardAlerts'))+'</h3><div class="mini-alert">'+ic('alert')+'<span>'+esc(L2(top,'title'))+'</span></div>':'')+
+    '<h3>'+esc(t('boardShelters'))+'</h3>'+sortedShelters().slice(0,3).map(function(s){var free=Math.max(0,s.capacity-s.occupied),pct=Math.round(s.occupied/s.capacity*100);return '<div class="mini-shel"><strong>'+esc(L2(s,'name'))+'</strong><span class="muted">'+free+'</span><div class="meter"><span class="'+(pct>90?'hot':'')+'" style="width:'+pct+'%"></span></div></div>';}).join('')+
+    '<h3>'+esc(t('boardRequests'))+'</h3><div class="mini-counts"><div><b>'+open+'</b><span>'+esc(t('statOpen'))+'</span></div><div><b>'+done+'</b><span>'+esc(t('statDone'))+'</span></div><div><b>'+vols+'</b><span>'+esc(t('statVol'))+'</span></div><div><b>'+fmtNum(beds)+'</b><span>'+esc(t('statBeds'))+'</span></div></div></aside>';
+  var hero='<section class="hero">'+ripples+'<div class="container hero-in"><div><h1>'+esc(t('heroTitle'))+'</h1><p class="lead">'+esc(t('heroSub'))+'</p>'+
+    '<div class="actions"><a class="btn light" href="#/dashboard/report">'+ic('alert')+' '+esc(t('ctaReport'))+'</a><a class="btn outline-w" href="#/dashboard/request">'+ic('heart')+' '+esc(t('ctaHelp'))+'</a><a class="btn outline-w" href="#/register">'+ic('users')+' '+esc(t('ctaVolunteer'))+'</a><a class="btn outline-w" href="#/shelters">'+ic('home')+' '+esc(t('ctaShelter'))+'</a></div>'+
+    '<p class="helpline">'+ic('phone')+' '+esc(t('helpline'))+' <strong>112</strong></p></div>'+board+'</div></section>';
+  var feats=[['alert','f1'],['heart','f2'],['users','f3'],['shield','f4'],['home','f5'],['wifioff','f6']].map(function(f){return '<article class="card feat"><div class="fi">'+ic(f[0])+'</div><h3>'+esc(t(f[1]+'t'))+'</h3><p>'+esc(t(f[1]+'d'))+'</p></article>';}).join('');
+  var steps=[1,2,3,4].map(function(n){return '<li><h3>'+esc(t('h'+n+'t'))+'</h3><p>'+esc(t('h'+n+'d'))+'</p></li>';}).join('');
+  return banner+hero+
+    '<section class="section"><div class="container"><div class="section-head"><h2>'+esc(t('featuresTitle'))+'</h2><p>'+esc(t('featuresSub'))+'</p></div><div class="grid g3">'+feats+'</div></div></section>'+
+    '<section class="section alt"><div class="container"><div class="grid g2" style="align-items:start"><div><div class="section-head"><h2>'+esc(t('resTitle'))+'</h2><p>'+esc(t('resSub'))+'</p></div><a class="btn ghost sm" href="#/resources">'+esc(t('viewAll'))+'</a></div><div class="card">'+db.resources.slice(0,5).map(resourceRow).join('')+'</div></div></div></section>'+
+    '<section class="section"><div class="container"><div class="row between" style="align-items:flex-end;margin-bottom:1.4rem"><div class="section-head" style="margin:0"><h2>'+esc(t('shelTitle'))+'</h2><p style="margin:0">'+esc(t('shelSub'))+'</p></div><a class="btn ghost sm" href="#/shelters">'+esc(t('viewAll'))+'</a></div><div class="grid g3">'+sortedShelters().slice(0,3).map(shelterCard).join('')+'</div></div></section>'+
+    '<section class="section alt"><div class="container"><div class="section-head"><h2>'+esc(t('howTitle'))+'</h2></div><ol class="steps">'+steps+'</ol></div></section>'+
+    '<section class="section"><div class="container"><div class="cta"><div><h2>'+esc(t('ctaTitle'))+'</h2><p>'+esc(t('ctaSub'))+'</p></div><div class="row"><a class="btn light" href="#/register">'+esc(t('register'))+'</a><a class="btn outline-w" href="#/login">'+esc(t('login'))+'</a></div></div></div></section>';
+}
+function viewAlerts(){
+  var l=activeAlerts();
+  return '<div class="container section">'+pageHead(t('alertsTitle'),t('alertsSub'))+'<div class="list">'+(l.length?l.map(function(a){return alertCard(a);}).join(''):emptyBox('alert',t('noAlerts')))+'</div></div>';
+}
+function viewShelters(){
+  return '<div class="container section">'+pageHead(t('sheltersTitle'),t('shelSub'))+
+    '<div class="field" style="max-width:380px"><label for="shelter-search">'+esc(t('findShelter'))+'</label><input id="shelter-search" type="search" value="'+esc(ui.shelterQ)+'" autocomplete="off"></div>'+
+    '<div class="grid g3" id="shelter-list">'+shelterListHtml(ui.shelterQ)+'</div></div>';
+}
+function viewResources(){
+  return '<div class="container section">'+pageHead(t('resourcesTitle'),t('resSub'))+'<div class="card" style="max-width:820px">'+db.resources.map(resourceRow).join('')+'</div></div>';
+}
+function viewLogin(){
+  var demos=[
+    ['user@nammarescue.in','User@123','role.user'],
+    ['volunteer@nammarescue.in','Volunteer@123','role.volunteer'],
+    ['admin@nammarescue.in','Admin@123','role.admin']
+  ];
+  return '<div class="container"><div class="card auth"><h1 style="font-size:1.8rem">'+esc(t('loginTitle'))+'</h1><p class="muted">'+esc(t('loginSub'))+'</p>'+
+    '<form data-form="login" novalidate><div class="field"><label for="l-email">'+esc(t('email'))+'</label><input id="l-email" name="email" type="email" required autocomplete="username"></div>'+
+    '<div class="field"><label for="l-pass">'+esc(t('password'))+'</label><input id="l-pass" name="password" type="password" required autocomplete="current-password"></div>'+
+    '<div class="err" id="auth-err" role="alert"></div><button class="btn block" type="submit">'+esc(t('login'))+'</button></form>'+
+    '<p style="margin:1rem 0 0" class="small">'+esc(t('noAccount'))+' <a href="#/register">'+esc(t('register'))+'</a></p>'+
+    '<div class="demo"><strong class="small">'+esc(t('demoTitle'))+'</strong>'+demos.map(function(d){
+      return '<div class="row"><span><strong>'+esc(t(d[2]))+'</strong>: <code style="font-size:.85rem">'+d[0]+'</code></span><button class="btn ghost sm" type="button" data-act="demo" data-email="'+d[0]+'" data-pass="'+d[1]+'">'+esc(t('useDemo'))+'</button></div>';
+    }).join('')+'</div></div></div>';
+}
+function viewRegister(){
+  return '<div class="container"><div class="card auth"><h1 style="font-size:1.8rem">'+esc(t('regTitle'))+'</h1><p class="muted">'+esc(t('regSub'))+'</p>'+
+    '<form data-form="register" novalidate><div class="field"><label for="r-name">'+esc(t('fullName'))+'</label><input id="r-name" name="name" required autocomplete="name"></div>'+
+    '<div class="field"><label for="r-email">'+esc(t('email'))+'</label><input id="r-email" name="email" type="email" required autocomplete="email"></div>'+
+    '<div class="field"><label for="r-phone">'+esc(t('phone'))+'</label><input id="r-phone" name="phone" type="tel" autocomplete="tel"></div>'+
+    '<div class="field"><label for="r-pass">'+esc(t('password'))+'</label><input id="r-pass" name="password" type="password" required minlength="6" autocomplete="new-password"></div>'+
+    '<fieldset class="field" style="border:0;padding:0;margin:0 0 1rem"><legend class="fl" style="padding:0;margin-bottom:.3rem">'+esc(t('joinAs'))+'</legend><div class="checks"><label><input type="radio" name="role" value="user" checked> '+esc(t('role.user'))+'</label><label><input type="radio" name="role" value="volunteer"> '+esc(t('role.volunteer'))+'</label></div></fieldset>'+
+    '<div class="err" id="auth-err" role="alert"></div><button class="btn block" type="submit">'+esc(t('register'))+'</button></form>'+
+    '<p style="margin:1rem 0 0" class="small">'+esc(t('haveAccount'))+' <a href="#/login">'+esc(t('login'))+'</a></p></div></div>';
+}
+
+/* ---------- dashboard shell ---------- */
+var TABS={
+  user:[['overview','grid'],['report','alert'],['request','heart'],['myrequests','clip'],['alerts','mega'],['resources','package'],['offline','wifioff']],
+  volunteer:[['tasks','search'],['mytasks','clip'],['distribution','package'],['alerts','mega'],['profile','user']],
+  admin:[['overview','bars'],['reports','alert'],['requests','clip'],['alerts','mega'],['shelters','home'],['resources','package'],['people','users']]
+};
+function dlink(tab){return '#/dashboard/'+tab;}
+function viewDashboard(r){
+  var u=me(),tabs=TABS[u.role],tab=r.sub,valid=tabs.some(function(x){return x[0]===tab;});
+  if(!valid)tab=tabs[0][0];
+  var badgeCount={};
+  if(u.role==='admin'){badgeCount.reports=db.reports.filter(function(p){return p.status==='pending';}).length;badgeCount.requests=db.requests.filter(function(q){return q.status==='Pending';}).length;}
+  if(u.role==='user'){badgeCount.offline=db.offline.filter(function(o){return o.userId===u.id&&o.status==='queued';}).length;}
+  var side='<aside class="side"><div class="me"><span class="avatar" aria-hidden="true">'+esc(initials(u.name))+'</span><div><b>'+esc(u.name)+'</b><small>'+esc(t('role.'+u.role))+'</small></div></div><nav class="tabs" aria-label="'+esc(t('nav.dashboard'))+'">'+
+    tabs.map(function(x){return '<a href="'+dlink(x[0])+'"'+(x[0]===tab?' aria-current="page"':'')+'>'+ic(x[1])+' '+esc(t('tab.'+u.role+'.'+x[0]))+(badgeCount[x[0]]?'<span class="tc">'+badgeCount[x[0]]+'</span>':'')+'</a>';}).join('')+'</nav></aside>';
+  var fn=VIEWS[u.role+'.'+tab];
+  return '<div class="container dash">'+side+'<section aria-live="polite">'+(isOffline()&&u.role==='user'?'<div class="card" style="margin-bottom:1rem;background:var(--warn-bg);color:var(--warn);border-color:transparent">'+ic('wifioff')+' '+esc(t('offlineBanner'))+'</div>':'')+(fn?fn(u):'')+'</section></div>';
+}
+
+/* ---------- user views ---------- */
+function reportFormHtml(){
+  return '<form data-form="report" class="card" novalidate><div class="form-grid">'+
+    '<div class="field"><label for="f-type">'+esc(t('disasterType'))+'</label><select id="f-type" name="type">'+opts(TYPES,'flood',function(x){return t('type.'+x);})+'</select></div>'+
+    '<div class="field"><label for="f-sev">'+esc(t('severity'))+'</label><select id="f-sev" name="severity">'+opts(SEV,'medium',function(x){return t('sev.'+x);})+'</select></div>'+
+    '<div class="field full"><label for="f-loc">'+esc(t('location'))+'</label><div class="input-with-btn"><input id="f-loc" name="location" required placeholder="'+esc(t('locationPh'))+'"><button type="button" class="btn ghost sm" data-act="gps" data-target="f-loc">'+ic('compass')+' '+esc(t('detectGPS'))+'</button></div></div>'+
+    '<div class="field"><label for="f-date">'+esc(t('incidentDate'))+'</label><input id="f-date" name="date" type="date" max="'+todayStr()+'" value="'+todayStr()+'" required></div>'+
+    '<div class="field full"><label for="f-desc">'+esc(t('description'))+'</label><textarea id="f-desc" name="description" required placeholder="'+esc(t('descPh'))+'"></textarea></div>'+
+    '<div class="field full"><label for="photo-input">'+esc(t('photo'))+'</label><input id="photo-input" type="file" accept="image/*"><span class="hint">'+esc(t('photoHint'))+'</span><div class="photo-prev-wrap" id="photo-prev-wrap"><img class="photo-prev" id="photo-prev" alt="Photo preview"><button type="button" class="photo-remove" data-act="remove-photo">'+esc(t('removePhoto'))+'</button></div></div></div>'+
+    '<div class="err" id="form-err" role="alert"></div><button class="btn" type="submit">'+ic('send')+' '+esc(t('submitReport'))+'</button></form>';
+}
+function requestFields(q){
+  q=q||{category:'food',people:1,urgency:'medium',disasterType:'flood',location:'',description:''};
+  return '<div class="form-grid"><div class="field"><label for="q-cat">'+esc(t('category'))+'</label><select id="q-cat" name="category">'+opts(CATS,q.category,function(x){return t('cat.'+x);})+'</select></div>'+
+    '<div class="field"><label for="q-people">'+esc(t('people'))+'</label><input id="q-people" name="people" type="number" min="1" max="500" value="'+q.people+'" required></div>'+
+    '<div class="field"><label for="q-urg">'+esc(t('urgency'))+'</label><select id="q-urg" name="urgency">'+opts(SEV,q.urgency,function(x){return t('sev.'+x);})+'</select></div>'+
+    '<div class="field"><label for="q-type">'+esc(t('disasterType'))+'</label><select id="q-type" name="disasterType">'+opts(TYPES,q.disasterType,function(x){return t('type.'+x);})+'</select></div>'+
+    '<div class="field full"><label for="q-loc">'+esc(t('location'))+'</label><div class="input-with-btn"><input id="q-loc" name="location" required value="'+esc(q.location)+'" placeholder="'+esc(t('locationPh'))+'"><button type="button" class="btn ghost sm" data-act="gps" data-target="q-loc">'+ic('compass')+' '+esc(t('detectGPS'))+'</button></div></div>'+
+    '<div class="field full"><label for="q-desc">'+esc(t('notes'))+'</label><textarea id="q-desc" name="description" required placeholder="'+esc(t('descPh'))+'">'+esc(q.description)+'</textarea></div></div>';
+}
+
+var VIEWS={};
+VIEWS['user.overview']=function(u){
+  var rs=db.requests.filter(function(x){return x.userId===u.id;}),open=rs.filter(function(x){return x.status!=='Resolved'&&x.status!=='Cancelled';}).length;
+  var reps=db.reports.filter(function(x){return x.userId===u.id;}).length,q=db.offline.filter(function(o){return o.userId===u.id&&o.status==='queued';}).length,a=activeAlerts()[0];
+  return pageHead(t('hello',{name:u.name.split(' ')[0]}),t('overviewSub'))+
+    '<div class="stats">'+statCard(open,t('myOpen'))+statCard(reps,t('myReports'))+statCard(q,t('waitSync'))+'</div>'+
+    '<div class="row" style="margin-bottom:1.2rem"><a class="btn" href="'+dlink('report')+'">'+ic('alert')+' '+esc(t('ctaReport'))+'</a><a class="btn ghost" href="'+dlink('request')+'">'+ic('heart')+' '+esc(t('ctaHelp'))+'</a></div>'+
+    (a?'<h2 style="font-size:1.2rem">'+esc(t('latestAlert'))+'</h2>'+alertCard(a)+'<div style="height:1.2rem"></div>':'')+
+    '<h2 style="font-size:1.2rem">'+esc(t('recent'))+'</h2><div class="list">'+(rs.length?rs.slice(0,3).map(function(x){return requestCard(x,'user');}).join(''):emptyBox('clip',t('noRequests'),'<a class="btn sm" href="'+dlink('request')+'">'+esc(t('ctaHelp'))+'</a>'))+'</div>';
+};
+VIEWS['user.report']=function(){return pageHead(t('reportTitle'),t('reportSub'))+reportFormHtml();};
+VIEWS['user.request']=function(){
+  return pageHead(t('requestTitle'),t('requestSub'))+'<form data-form="request" class="card" novalidate>'+requestFields()+'<div class="err" id="form-err" role="alert"></div><button class="btn" type="submit">'+ic('send')+' '+esc(t('submitRequest'))+'</button></form>';
+};
+VIEWS['user.myrequests']=function(u){
+  var rs=db.requests.filter(function(x){return x.userId===u.id;}),ps=db.reports.filter(function(x){return x.userId===u.id;});
+  return pageHead(t('myRequestsTitle'))+'<div class="list">'+(rs.length?rs.map(function(x){return requestCard(x,'user');}).join(''):emptyBox('clip',t('noRequests'),'<a class="btn sm" href="'+dlink('request')+'">'+esc(t('ctaHelp'))+'</a>'))+'</div>'+
+    '<h2 style="font-size:1.3rem;margin-top:2rem">'+esc(t('myReportsTitle'))+'</h2><div class="list">'+(ps.length?ps.map(function(p){return reportCard(p,false);}).join(''):emptyBox('alert',t('noReports'),'<a class="btn sm" href="'+dlink('report')+'">'+esc(t('ctaReport'))+'</a>'))+'</div>';
+};
+VIEWS['user.alerts']=VIEWS['volunteer.alerts']=function(){
+  return pageHead(t('alertsTitle'),t('alertsSub'))+'<div class="list">'+activeAlerts().map(function(a){return alertCard(a);}).join('')+'</div>'+
+    '<h2 style="font-size:1.3rem;margin-top:2rem">'+esc(t('sheltersTitle'))+'</h2><div class="grid g2">'+sortedShelters().map(shelterCard).join('')+'</div>';
+};
+VIEWS['user.resources']=function(){return pageHead(t('resourcesTitle'),t('resSub'))+'<div class="card">'+db.resources.map(resourceRow).join('')+'</div>';};
+VIEWS['user.offline']=function(u){
+  var items=db.offline.filter(function(o){return o.userId===u.id;}),q=items.filter(function(o){return o.status==='queued';}).length;
+  return pageHead(t('offlineTitle'),t('offlineSub'))+
+    '<div class="card" style="margin-bottom:1rem"><div class="row between"><label class="tgl" for="sim-toggle"><input type="checkbox" class="switch" id="sim-toggle" role="switch" '+(ui.sim?'checked':'')+' data-change="sim"> '+esc(t('simOffline'))+'</label>'+
+    '<button class="btn" data-act="sync" '+(q?'':'disabled')+'>'+ic('refresh')+' '+esc(t('syncNow'))+(q?' ('+q+')':'')+'</button></div><p class="hint" style="margin:.5rem 0 0">'+esc(t('simHint'))+'</p></div>'+
+    '<div class="list">'+(items.length?items.map(function(o){
+      var p=o.payload,title=o.kind==='report'?t('kindReport')+' - '+t('type.'+p.type):t('kindRequest')+' - '+t('cat.'+p.category);
+      return '<article class="card item"><div class="item-top"><h3>'+esc(title)+'</h3>'+(o.status==='queued'?badge('st-Pending',ic('clock')+' '+esc(t('syncQueued'))):badge('st-Resolved',ic('check')+' '+esc(t('syncDone'))))+'</div>'+
+        '<div class="meta"><span>'+ic('pin')+' '+esc(p.location)+'</span><span>'+esc(t('savedOn'))+' '+esc(fmtDate(o.createdAt,true))+'</span>'+(o.syncedAt?'<span>'+esc(t('syncedOn'))+' '+esc(fmtDate(o.syncedAt,true))+'</span>':'')+'</div><p style="margin:0">'+esc(p.description)+'</p></article>';
+    }).join(''):emptyBox('wifioff',t('noOffline')))+'</div>';
+};
+
+/* ---------- volunteer views ---------- */
+function taskFilterFn(u){
+  var f=ui.f,area=(u.profile&&u.profile.area||'').toLowerCase().split(/[,;]/).map(function(s){return s.trim();}).filter(Boolean);
+  return function(q){
+    if(q.status!=='Pending'||q.assignedTo)return false;
+    if(f.loc&&q.location.toLowerCase().indexOf(f.loc.toLowerCase())<0)return false;
+    if(f.urg&&q.urgency!==f.urg)return false;
+    if(f.type&&q.disasterType!==f.type)return false;
+    if(f.cat&&q.category!==f.cat)return false;
+    if(f.mine&&area.length&&!area.some(function(a){return q.location.toLowerCase().indexOf(a)>-1;}))return false;
+    return true;
+  };
+}
+function taskListHtml(u){
+  var l=db.requests.filter(taskFilterFn(u)).sort(function(a,b){return SEVRANK[a.urgency]-SEVRANK[b.urgency]||new Date(b.createdAt)-new Date(a.createdAt);});
+  if(!l.length)return emptyBox('search',t('noTasks'));
+  return l.map(function(q){
+    return requestCard(q,'vol').replace(/<\/article>$/,'<div class="actions-row"><button class="btn sm" data-act="vol-accept" data-id="'+q.id+'">'+ic('check')+' '+esc(t('acceptTask'))+'</button></div></article>');
+  }).join('');
+}
+VIEWS['volunteer.tasks']=function(u){
+  var f=ui.f;
+  return pageHead(t('tasksTitle'),t('tasksSub'))+(u.profile?'':'<div class="card" style="margin-bottom:1rem;background:var(--warn-bg);color:var(--warn);border-color:transparent">'+ic('alert')+' '+esc(t('profileNeeded'))+' <a href="'+dlink('profile')+'">'+esc(t('tab.volunteer.profile'))+'</a></div>')+
+    '<div class="card" style="margin-bottom:1rem"><div class="filters">'+
+    '<div class="field"><label for="fl-loc">'+esc(t('locContains'))+'</label><input id="fl-loc" data-filter="loc" value="'+esc(f.loc)+'"></div>'+
+    '<div class="field"><label for="fl-urg">'+esc(t('urgency'))+'</label><select id="fl-urg" data-filter="urg"><option value="">'+esc(t('all'))+'</option>'+opts(SEV,f.urg,function(x){return t('sev.'+x);})+'</select></div>'+
+    '<div class="field"><label for="fl-type">'+esc(t('disasterType'))+'</label><select id="fl-type" data-filter="type"><option value="">'+esc(t('all'))+'</option>'+opts(TYPES,f.type,function(x){return t('type.'+x);})+'</select></div>'+
+    '<div class="field"><label for="fl-cat">'+esc(t('category'))+'</label><select id="fl-cat" data-filter="cat"><option value="">'+esc(t('all'))+'</option>'+opts(CATS,f.cat,function(x){return t('cat.'+x);})+'</select></div></div>'+
+    '<div class="row between" style="margin-top:.8rem"><label class="tgl" style="font-weight:500"><input type="checkbox" data-filter="mine" '+(f.mine?'checked':'')+'> '+esc(t('myAreaOnly'))+'</label><button class="btn ghost sm" data-act="clear-filters">'+esc(t('clearFilters'))+'</button></div></div>'+
+    '<div class="list" id="vol-list">'+taskListHtml(u)+'</div>';
+};
+VIEWS['volunteer.mytasks']=function(u){
+  var mine=db.requests.filter(function(q){return q.assignedTo===u.id;}),active=mine.filter(function(q){return q.status!=='Resolved'&&q.status!=='Cancelled';}),done=mine.filter(function(q){return q.status==='Resolved';});
+  function card(q){
+    var btns='';
+    if(q.status==='Acknowledged')btns='<button class="btn sm" data-act="vol-progress" data-id="'+q.id+'">'+ic('zap')+' '+esc(t('startWork'))+'</button>';
+    if(q.status==='In Progress')btns='<button class="btn ghost sm" data-act="vol-progress" data-id="'+q.id+'">'+ic('edit')+' '+esc(t('updateProgress'))+'</button>';
+    if(q.status==='Acknowledged'||q.status==='In Progress')btns+='<button class="btn sm" data-act="vol-complete" data-id="'+q.id+'">'+ic('check')+' '+esc(t('markComplete'))+'</button>';
+    return requestCard(q,'mine').replace(/<\/article>$/,(btns?'<div class="actions-row">'+btns+'</div>':'')+'</article>');
+  }
+  return pageHead(t('myTasksTitle'),t('myTasksSub'))+'<div class="list">'+(active.length?active.map(card).join(''):emptyBox('clip',t('noMyTasks')))+'</div>'+
+    (done.length?'<h2 style="font-size:1.3rem;margin-top:2rem">'+esc(t('completedTasks'))+'</h2><div class="list">'+done.map(card).join('')+'</div>':'');
+};
+VIEWS['volunteer.distribution']=function(u){
+  var mine=db.requests.filter(function(q){return q.assignedTo===u.id&&q.status!=='Cancelled';}),ds=db.distributions.filter(function(d){return d.volId===u.id;});
+  var helped=ds.reduce(function(a,d){return a+d.beneficiaries;},0),items=ds.reduce(function(a,d){return a+d.quantity;},0);
+  return pageHead(t('distTitle'),t('distSub'))+'<div class="stats">'+statCard(fmtNum(helped),t('totalHelped'))+statCard(fmtNum(items),t('totalItems'))+'</div>'+
+    '<form data-form="dist" class="card" novalidate><div class="form-grid">'+
+    '<div class="field"><label for="d-cat">'+esc(t('category'))+'</label><select id="d-cat" name="category">'+opts(CATS,'food',function(x){return t('cat.'+x);})+'</select></div>'+
+    '<div class="field"><label for="d-link">'+esc(t('linked'))+'</label><select id="d-link" name="requestId"><option value="">'+esc(t('noLink'))+'</option>'+mine.map(function(q){return '<option value="'+q.id+'">'+esc(t('cat.'+q.category)+' - '+q.location)+'</option>';}).join('')+'</select></div>'+
+    '<div class="field"><label for="d-qty">'+esc(t('quantity'))+'</label><input id="d-qty" name="quantity" type="number" min="1" value="1" required></div>'+
+    '<div class="field"><label for="d-ben">'+esc(t('beneficiaries'))+'</label><input id="d-ben" name="beneficiaries" type="number" min="0" value="1" required></div>'+
+    '<div class="field full"><label for="d-notes">'+esc(t('assistance'))+'</label><textarea id="d-notes" name="notes" placeholder="'+esc(t('assistPh'))+'"></textarea><span class="hint">'+esc(t('stockHint'))+'</span></div></div>'+
+    '<button class="btn" type="submit">'+ic('check')+' '+esc(t('recordBtn'))+'</button></form>'+
+    '<h2 style="font-size:1.3rem;margin-top:2rem">'+esc(t('distHistory'))+'</h2><div class="list">'+(ds.length?ds.map(function(d){return '<article class="card item"><div class="item-top"><h3>'+ic(CATIC[d.category])+' '+esc(t('cat.'+d.category))+' x '+fmtNum(d.quantity)+'</h3><span class="muted small">'+esc(t('recordedOn'))+' '+esc(fmtDate(d.createdAt,true))+'</span></div><div class="meta"><span>'+ic('users')+' '+esc(t('beneficiaries'))+': '+fmtNum(d.beneficiaries)+'</span></div>'+(d.notes?'<p style="margin:0">'+esc(d.notes)+'</p>':'')+'</article>';}).join(''):emptyBox('package',t('noDist')))+'</div>';
+};
+VIEWS['volunteer.profile']=function(u){
+  var p=u.profile||{skills:[],area:'',availability:'anytime'};
+  return pageHead(t('profileTitle'),t('profileSub'))+(u.profile?'':'<div class="card" style="margin-bottom:1rem;background:var(--warn-bg);color:var(--warn);border-color:transparent">'+ic('alert')+' '+esc(t('profileNeeded'))+'</div>')+
+    '<form data-form="profile" class="card" novalidate><div class="field"><span class="fl" id="sk-l">'+esc(t('skills'))+'</span><div class="checks" role="group" aria-labelledby="sk-l">'+SKILLS.map(function(s){return '<label><input type="checkbox" name="skills" value="'+s+'" '+(p.skills.indexOf(s)>-1?'checked':'')+'> '+esc(t('skill.'+s))+'</label>';}).join('')+'</div></div>'+
+    '<div class="form-grid"><div class="field"><label for="p-area">'+esc(t('serviceArea'))+'</label><input id="p-area" name="area" value="'+esc(p.area)+'" placeholder="'+esc(t('serviceAreaPh'))+'" required></div>'+
+    '<div class="field"><label for="p-av">'+esc(t('availability'))+'</label><select id="p-av" name="availability">'+opts(AVAIL,p.availability,function(x){return t('av.'+x);})+'</select></div></div>'+
+    '<div class="err" id="form-err" role="alert"></div><button class="btn" type="submit">'+ic('check')+' '+esc(t('saveProfile'))+'</button></form>';
+};
+
+/* ---------- admin views ---------- */
+function bars(map,keyLabel){
+  var max=Math.max.apply(null,Object.keys(map).map(function(k){return map[k];}).concat([1]));
+  return Object.keys(map).map(function(k){
+    return '<div class="chart-row"><span>'+esc(keyLabel(k))+'</span><div class="meter"><span style="width:'+Math.round(map[k]/max*100)+'%"></span></div><strong>'+map[k]+'</strong></div>';
+  }).join('');
+}
+VIEWS['admin.overview']=function(){
+  var st={},cat={};
+  STATUS.forEach(function(s){st[s]=0;});
+  CATS.forEach(function(c){cat[c]=0;});
+  db.requests.forEach(function(q){if(st[q.status]!==undefined)st[q.status]++;cat[q.category]++;});
+  var vols=db.users.filter(function(u){return u.role==='volunteer';}).length,mem2=db.users.filter(function(u){return u.role==='user';}).length;
+  return pageHead(t('adminTitle'),t('adminSub'))+'<div class="stats">'+
+    statCard(db.reports.filter(function(p){return p.status==='pending';}).length,t('toVerify'))+
+    statCard(db.requests.filter(function(q){return q.status==='Pending'&&!q.assignedTo;}).length,t('unassignedReq'))+
+    statCard(vols,t('volunteersN'))+statCard(mem2,t('membersN'))+'</div>'+
+    '<div class="grid g2"><div class="card"><h3>'+esc(t('byStatus'))+'</h3>'+bars(st,function(k){return t('st.'+sk(k));})+'</div><div class="card"><h3>'+esc(t('byCategory'))+'</h3>'+bars(cat,function(k){return t('cat.'+k);})+'</div></div>';
+};
+VIEWS['admin.reports']=function(){
+  var l=db.reports.slice().sort(function(a,b){return (a.status==='pending'?0:1)-(b.status==='pending'?0:1)||new Date(b.createdAt)-new Date(a.createdAt);});
+  return pageHead(t('reportsTitle'),t('reportsSub'))+'<div class="list">'+l.map(function(p){return reportCard(p,true);}).join('')+'</div>';
+};
+VIEWS['admin.requests']=function(){
+  var vols=db.users.filter(function(u){return u.role==='volunteer';});
+  var l=db.requests.slice().sort(function(a,b){return SEVRANK[a.urgency]-SEVRANK[b.urgency]||new Date(b.createdAt)-new Date(a.createdAt);});
+  return pageHead(t('requestsTitle'),t('requestsSub'))+'<div class="list">'+l.map(function(q){
+    var card=requestCard(q,'admin');
+    var ctl='<div class="inline-form"><div class="field"><label for="as-'+q.id+'">'+esc(t('assignVol'))+'</label><select id="as-'+q.id+'" data-change="assign" data-id="'+q.id+'"><option value="">'+esc(t('unassigned'))+'</option>'+vols.map(function(v){return '<option value="'+v.id+'"'+(q.assignedTo===v.id?' selected':'')+'>'+esc(v.name)+'</option>';}).join('')+'</select></div>'+
+      '<div class="field"><label for="ss-'+q.id+'">'+esc(t('setStatus'))+'</label><select id="ss-'+q.id+'" data-change="req-status" data-id="'+q.id+'">'+STATUS.concat(['Cancelled']).map(function(s){return '<option value="'+s+'"'+(q.status===s?' selected':'')+'>'+esc(t('st.'+sk(s)))+'</option>';}).join('')+'</select></div></div>';
+    return card.replace(/<\/article>$/,ctl+'</article>');
+  }).join('')+'</div>';
+};
+VIEWS['admin.alerts']=function(){
+  return pageHead(t('publishAlert'),t('fallbackHint'))+
+    '<form data-form="alert" class="card" novalidate><div class="form-grid">'+
+    '<div class="field"><label for="al-en">'+esc(t('titleEn'))+'</label><input id="al-en" name="titleEn" required></div><div class="field"><label for="al-ta">'+esc(t('titleTa'))+'</label><input id="al-ta" name="titleTa" lang="ta"></div>'+
+    '<div class="field"><label for="al-men">'+esc(t('msgEn'))+'</label><textarea id="al-men" name="bodyEn" required></textarea></div><div class="field"><label for="al-mta">'+esc(t('msgTa'))+'</label><textarea id="al-mta" name="bodyTa" lang="ta"></textarea></div>'+
+    '<div class="field"><label for="al-area">'+esc(t('area'))+'</label><input id="al-area" name="area" required></div><div class="field"><label for="al-lv">'+esc(t('alertLevel'))+'</label><select id="al-lv" name="level">'+opts(['info','watch','warning','severe'],'warning',function(x){return t('lv.'+x);})+'</select></div></div>'+
+    '<button class="btn" type="submit">'+ic('mega')+' '+esc(t('publishBtn'))+'</button></form>'+
+    '<h2 style="font-size:1.3rem;margin-top:2rem">'+esc(t('activeAlerts'))+'</h2><div class="list">'+(db.alerts.length?activeAlerts().map(function(a){return alertCard(a,true);}).join(''):emptyBox('alert',t('noAlerts')))+'</div>';
+};
+VIEWS['admin.shelters']=function(){
+  return pageHead(t('sheltersTitle'))+'<div class="grid g2">'+db.shelters.map(function(s){
+    return shelterCard(s).replace(/<\/article>$/,'<form class="inline-form" data-form="shelter-update" data-id="'+s.id+'"><div class="field"><label for="so-'+s.id+'">'+esc(t('occupied'))+'</label><input id="so-'+s.id+'" name="occupied" type="number" min="0" value="'+s.occupied+'"></div><div class="field"><label for="ss2-'+s.id+'">'+esc(t('openClosed'))+'</label><select id="ss2-'+s.id+'" name="status"><option value="open"'+(s.status==='open'?' selected':'')+'>'+esc(t('shelter.open'))+'</option><option value="closed"'+(s.status==='closed'?' selected':'')+'>'+esc(t('shelter.closed'))+'</option></select></div><button class="btn sm" type="submit">'+esc(t('updateBtn'))+'</button></form></article>');
+  }).join('')+'</div>'+
+  '<h2 style="font-size:1.3rem;margin-top:2rem">'+esc(t('addShelter'))+'</h2><form data-form="shelter-add" class="card" novalidate><div class="form-grid">'+
+  '<div class="field"><label for="sa-n">'+esc(t('shelterName'))+'</label><input id="sa-n" name="name" required></div><div class="field"><label for="sa-nt">'+esc(t('shelterName'))+' ('+esc(t('titleTa').replace(/.*\(|\)/g,''))+')</label><input id="sa-nt" name="nameTa" lang="ta"></div>'+
+  '<div class="field"><label for="sa-a">'+esc(t('area'))+'</label><input id="sa-a" name="area" required></div><div class="field"><label for="sa-c">'+esc(t('capacityL'))+'</label><input id="sa-c" name="capacity" type="number" min="1" value="100" required></div>'+
+  '<div class="field"><label for="sa-p">'+esc(t('contact'))+'</label><input id="sa-p" name="contact" type="tel"></div>'+
+  '<div class="field full"><span class="fl" id="sa-fl">'+esc(t('facilities'))+'</span><div class="checks" role="group" aria-labelledby="sa-fl">'+FACS.map(function(f){return '<label><input type="checkbox" name="facilities" value="'+f+'" checked> '+esc(t('fac.'+f))+'</label>';}).join('')+'</div></div></div>'+
+  '<button class="btn" type="submit">'+ic('plus')+' '+esc(t('addBtn'))+'</button></form>';
+};
+VIEWS['admin.resources']=function(){
+  return pageHead(t('resourcesTitle'),t('resSub'))+'<div class="grid g2">'+db.resources.map(function(r){
+    return '<article class="card">'+resourceRow(r)+'<form class="inline-form" data-form="res-update" data-id="'+r.id+'"><div class="field"><label for="rs-'+r.id+'">'+esc(t('stockL'))+'</label><input id="rs-'+r.id+'" name="stock" type="number" min="0" value="'+r.stock+'"></div><div class="field"><label for="rt-'+r.id+'">'+esc(t('totalL'))+'</label><input id="rt-'+r.id+'" name="total" type="number" min="1" value="'+r.total+'"></div><button class="btn sm" type="submit">'+esc(t('updateBtn'))+'</button></form></article>';
+  }).join('')+'</div>'+
+  '<h2 style="font-size:1.3rem;margin-top:2rem">'+esc(t('addResource'))+'</h2><form data-form="res-add" class="card" novalidate><div class="form-grid">'+
+  '<div class="field"><label for="ra-n">'+esc(t('resourceName'))+'</label><input id="ra-n" name="name" required></div><div class="field"><label for="ra-nt">'+esc(t('resourceName'))+' (தமிழ்)</label><input id="ra-nt" name="nameTa" lang="ta"></div>'+
+  '<div class="field"><label for="ra-c">'+esc(t('category'))+'</label><select id="ra-c" name="category">'+opts(CATS,'food',function(x){return t('cat.'+x);})+'</select></div><div class="field"><label for="ra-u">'+esc(t('unit'))+'</label><input id="ra-u" name="unit" placeholder="'+esc(t('unitPh'))+'" required></div>'+
+  '<div class="field"><label for="ra-s">'+esc(t('stockL'))+'</label><input id="ra-s" name="stock" type="number" min="0" value="0" required></div><div class="field"><label for="ra-t">'+esc(t('totalL'))+'</label><input id="ra-t" name="total" type="number" min="1" value="100" required></div>'+
+  '<div class="field full"><label for="ra-l">'+esc(t('storedAt'))+'</label><input id="ra-l" name="location" required></div></div><button class="btn" type="submit">'+ic('plus')+' '+esc(t('addBtn'))+'</button></form>';
+};
+VIEWS['admin.people']=function(){
+  return pageHead(t('peopleTitle'))+'<div class="card table-wrap"><table><thead><tr><th>'+esc(t('colName'))+'</th><th>'+esc(t('email'))+'</th><th>'+esc(t('colRole'))+'</th><th>'+esc(t('colArea'))+'</th><th>'+esc(t('colJoined'))+'</th></tr></thead><tbody>'+
+    db.users.map(function(u){var p=u.profile;return '<tr><td><strong>'+esc(u.name)+'</strong></td><td>'+esc(u.email)+'</td><td>'+esc(t('role.'+u.role))+'</td><td>'+(p?esc(p.area)+'<div class="chips" style="margin-top:.3rem">'+p.skills.map(function(s){return '<span class="chip">'+esc(t('skill.'+s))+'</span>';}).join('')+'</div>':'-')+'</td><td>'+esc(fmtDate(u.createdAt))+'</td></tr>';}).join('')+'</tbody></table></div>';
+};
+
+/* ---------- render pipeline ---------- */
+var lastKey='';
+function viewFor(r){
+  switch(r.page){
+    case 'alerts':return viewAlerts();
+    case 'shelters':return viewShelters();
+    case 'resources':return viewResources();
+    case 'login':return viewLogin();
+    case 'register':return viewRegister();
+    case 'dashboard':return viewDashboard(r);
+    default:return viewHome();
+  }
+}
+function renderHeader(){$('#hdr').innerHTML=headerHtml(route());}
+function updateDemoBannerText(){
+  var titleEl=$('#db-title');if(titleEl)titleEl.textContent=t('noticeTitle')+':';
+  var textEl=$('#db-text');if(textEl)textEl.textContent=t('noticeBody');
+  var callEl=$('#db-call');if(callEl)callEl.textContent=t('helpline')+':';
+}
+function render(){
+  var r=route(),key=r.page+'/'+r.sub,y=window.scrollY;
+  if(r.page==='dashboard'&&!me()){toast(t('needLogin'),'warn');location.hash='#/login';return;}
+  if((r.page==='login'||r.page==='register')&&me()){location.hash='#/dashboard';return;}
+  document.documentElement.lang=lang;
+  $('#skip').textContent=t('skip');
+  document.title=t('brand')+' – '+t('tagline');
+  updateDemoBannerText();
+  renderHeader();
+  $('#app').innerHTML=viewFor(r);
+  $('#ftr').innerHTML=footerHtml();
+  var same=key===lastKey;
+  lastKey=key;
+  window.scrollTo(0,same?y:0);
+  if(!same){var m=$('#app');m.focus({preventScroll:true});}
+}
+function go(h){if(location.hash===h)render();else location.hash=h;}
+
+/* ---------- user interaction handlers ---------- */
+var H={};
+H.lang=function(el){lang=el.dataset.lang==='ta'?'ta':'en';ls.set('nammarescue_lang',lang);render();};
+H.menu=function(){ui.menu=!ui.menu;renderHeader();};
+H.bell=function(){ui.bell=!ui.bell;renderHeader();};
+H['read-all']=function(){var u=me();db.notifications.forEach(function(n){if(n.userId===u.id)n.read=true;});save();renderHeader();};
+H.logout=function(){ls.del('nammarescue_session');ui.bell=false;ui.menu=false;toast(t('loggedOut'));go('#/');};
+H.demo=function(el){
+  var em=$('#l-email'),pw=$('#l-pass');
+  if(em&&pw){em.value=el.dataset.email;pw.value=el.dataset.pass;pw.focus();}
+};
+H['reset-demo']=function(){
+  openDlg('<h2 id="dlg-title">'+esc(t('resetDemo'))+'</h2><p>'+esc(t('confirmReset'))+'</p><div class="row"><button class="btn danger" data-act="reset-go">'+esc(t('reset'))+'</button><button class="btn ghost" data-act="dlg-close">'+esc(t('cancel'))+'</button></div>');
+};
+H['reset-go']=function(){closeDlg();ls.del('nammarescue_session');db=seed();save();toast(t('toast.reset'));go('#/');};
+H['dlg-close']=closeDlg;
+H.sync=function(){syncOffline(false);};
+H['clear-filters']=function(){ui.f={loc:'',urg:'',type:'',cat:'',mine:false};render();};
+H.gps=function(el){acquireGPS(el.dataset.target,el);};
+H['remove-photo']=function(){
+  ui.photo=null;
+  var wrap=$('#photo-prev-wrap');if(wrap)wrap.style.display='none';
+  var inp=$('#photo-input');if(inp)inp.value='';
+};
+H['req-edit']=function(el){
+  var q=reqById(el.dataset.id);if(!q||q.status!=='Pending')return;
+  openDlg('<h2 id="dlg-title">'+esc(t('editRequest'))+'</h2><form data-form="req-edit" data-id="'+q.id+'" novalidate>'+requestFields(q)+'<div class="row" style="margin-top:1rem"><button class="btn" type="submit">'+esc(t('save'))+'</button><button class="btn ghost" type="button" data-act="dlg-close">'+esc(t('close'))+'</button></div></form>');
+};
+H['req-cancel']=function(el){
+  openDlg('<h2 id="dlg-title">'+esc(t('cancelRequest'))+'</h2><p>'+esc(t('confirmCancel'))+'</p><div class="row"><button class="btn danger" data-act="req-cancel-go" data-id="'+el.dataset.id+'">'+esc(t('cancelRequest'))+'</button><button class="btn ghost" data-act="dlg-close">'+esc(t('keep'))+'</button></div>');
+};
+H['req-cancel-go']=function(el){
+  var q=reqById(el.dataset.id),u=me();closeDlg();
+  if(q&&q.userId===u.id&&q.status==='Pending'){q.status='Cancelled';logUpdate(q,{type:'status',status:'Cancelled',by:u.name});save();toast(t('toast.cancelled'));render();}
+};
+H['vol-accept']=function(el){
+  var u=me(),q=reqById(el.dataset.id);
+  if(!u.profile){toast(t('toast.profileFirst'),'warn');go(dlink('profile'));return;}
+  if(!q||q.status!=='Pending'||q.assignedTo)return;
+  q.assignedTo=u.id;q.assignedName=u.name;
+  setStatus(q,'Acknowledged',u.name);
+  notify(q.userId,'n.volunteer',{cat:q.category,name:u.name});
+  save();toast(t('toast.accepted'));render();
+};
+H['vol-progress']=function(el){
+  var q=reqById(el.dataset.id),u=me();if(!q||q.assignedTo!==u.id)return;
+  openDlg('<h2 id="dlg-title">'+esc(t('updateProgress'))+'</h2><form data-form="progress" data-id="'+q.id+'" novalidate><div class="field"><label for="pg-pct">'+esc(t('progressPct'))+': <output id="pg-out">'+(q.progress||10)+'</output>%</label><input id="pg-pct" name="pct" type="range" min="0" max="90" step="10" value="'+(q.progress||10)+'" data-range="pg-out"></div><div class="field"><label for="pg-note">'+esc(t('progressNote'))+'</label><textarea id="pg-note" name="note"></textarea></div><div class="row"><button class="btn" type="submit">'+esc(t('save'))+'</button><button class="btn ghost" type="button" data-act="dlg-close">'+esc(t('close'))+'</button></div></form>');
+};
+H['vol-complete']=function(el){
+  var q=reqById(el.dataset.id),u=me();if(!q||q.assignedTo!==u.id)return;
+  setStatus(q,'Resolved',u.name);save();toast(t('toast.completed'));render();
+};
+H['rep-verify']=function(el){
+  var p=db.reports.filter(function(x){return x.id===el.dataset.id;})[0];if(!p)return;
+  p.status='verified';notify(p.userId,'n.verified',{loc:p.location});save();toast(t('toast.verified'));render();
+};
+H['rep-reject']=function(el){
+  var p=db.reports.filter(function(x){return x.id===el.dataset.id;})[0];if(!p)return;
+  p.status='rejected';notify(p.userId,'n.rejected',{loc:p.location});save();toast(t('toast.rejected'));render();
+};
+H['alert-withdraw']=function(el){
+  db.alerts=db.alerts.filter(function(a){return a.id!==el.dataset.id;});
+  save();toast(t('toast.withdrawn'));render();
+};
+
+document.addEventListener('click',function(e){
+  var el=e.target.closest('[data-act]');
+  if(el&&H[el.dataset.act]){H[el.dataset.act](el,e);return;}
+  if(ui.bell&&!e.target.closest('.bell-wrap')){ui.bell=false;renderHeader();}
+  if(ui.menu&&e.target.closest('#nav a')){ui.menu=false;}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    if(ui.bell){ui.bell=false;renderHeader();}
+    var d=$('#dlg');if(d&&d.open)closeDlg();
+  }
+});
+window.addEventListener('hashchange',function(){ui.menu=false;ui.bell=false;ui.photo=null;render();});
+
+/* ---------- form processing ---------- */
+var F={};
+function setErr(id,msg){var el=$('#'+id);if(el)el.textContent=msg||'';}
+function startSession(u){ls.set('nammarescue_session',u.id);}
+F.login=function(f,d){
+  var email=String(d.get('email')||'').trim().toLowerCase(),pass=String(d.get('password')||'');
+  var u=db.users.filter(function(x){return x.email.toLowerCase()===email&&x.password===pass;})[0];
+  if(!u){setErr('auth-err',t('errCreds'));return;}
+  startSession(u);toast(t('welcome',{name:u.name}));go('#/dashboard');
+};
+F.register=function(f,d){
+  var name=String(d.get('name')||'').trim(),email=String(d.get('email')||'').trim().toLowerCase(),pass=String(d.get('password')||''),role=d.get('role')==='volunteer'?'volunteer':'user';
+  if(!name||!email){setErr('auth-err',t('errMissing'));return;}
+  if(pass.length<6){setErr('auth-err',t('errPass'));return;}
+  if(db.users.some(function(x){return x.email.toLowerCase()===email;})){setErr('auth-err',t('errExists'));return;}
+  var u={id:uid('u_'),name:name,email:email,phone:String(d.get('phone')||''),password:pass,role:role,createdAt:iso()};
+  if(role==='volunteer')u.profile=null;
+  db.users.push(u);save();startSession(u);toast(t('welcome',{name:u.name}));go(role==='volunteer'?dlink('profile'):'#/dashboard');
+};
+F.report=function(f,d){
+  var u=me(),locStr=String(d.get('location')||'').trim(),descStr=String(d.get('description')||'').trim(),dateStr=d.get('date');
+  if(!locStr||!descStr||!dateStr){setErr('form-err',t('errMissing'));return;}
+  var p={type:d.get('type'),location:locStr,description:descStr,date:dateStr,severity:d.get('severity'),photo:ui.photo};
+  ui.photo=null;
+  if(isOffline()){queueOffline('report',p,u);toast(t('toast.reportSaved'),'warn');go(dlink('offline'));}
+  else{addReport(p,u);toast(t('toast.reportSent'));go(dlink('myrequests'));}
+};
+F.request=function(f,d){
+  var u=me(),locStr=String(d.get('location')||'').trim(),descStr=String(d.get('description')||'').trim();
+  if(!locStr||!descStr){setErr('form-err',t('errMissing'));return;}
+  var p={category:d.get('category'),people:Math.max(1,parseInt(d.get('people'),10)||1),urgency:d.get('urgency'),disasterType:d.get('disasterType'),location:locStr,description:descStr};
+  if(isOffline()){queueOffline('request',p,u);toast(t('toast.requestSaved'),'warn');go(dlink('offline'));}
+  else{addRequest(p,u);toast(t('toast.requestSent'));go(dlink('myrequests'));}
+};
+F['req-edit']=function(f,d){
+  var q=reqById(f.dataset.id),u=me();if(!q||q.userId!==u.id||q.status!=='Pending'){closeDlg();return;}
+  q.category=d.get('category');
+  q.people=Math.max(1,parseInt(d.get('people'),10)||1);
+  q.urgency=d.get('urgency');
+  q.disasterType=d.get('disasterType');
+  q.location=String(d.get('location')||'').trim()||q.location;
+  q.description=String(d.get('description')||'').trim()||q.description;
+  q.updatedAt=iso();
+  save();closeDlg();toast(t('toast.updated'));render();
+};
+F.profile=function(f,d){
+  var u=me(),skills=d.getAll('skills'),area=String(d.get('area')||'').trim();
+  if(!area){setErr('form-err',t('errMissing'));return;}
+  u.profile={skills:skills,area:area,availability:d.get('availability')};
+  save();toast(t('toast.profileSaved'));go(dlink('tasks'));
+};
+F.progress=function(f,d){
+  var q=reqById(f.dataset.id),u=me();if(!q||q.assignedTo!==u.id)return;
+  var pct=parseInt(d.get('pct'),10)||0,note=String(d.get('note')||'').trim();
+  if(q.status!=='In Progress'){
+    q.status='In Progress';
+    logUpdate(q,{type:'status',status:'In Progress',by:u.name});
+    notify(q.userId,'n.status',{cat:q.category,status:'In Progress'});
+  }
+  q.progress=pct;logUpdate(q,{type:'note',note:note,pct:pct,by:u.name});save();closeDlg();toast(t('toast.progress'));render();
+};
+F.dist=function(f,d){
+  var u=me(),qty=Math.max(1,parseInt(d.get('quantity'),10)||1),cat=d.get('category');
+  db.distributions.unshift({id:uid('d_'),volId:u.id,volName:u.name,requestId:d.get('requestId')||null,category:cat,quantity:qty,beneficiaries:Math.max(0,parseInt(d.get('beneficiaries'),10)||0),notes:String(d.get('notes')||'').trim(),createdAt:iso()});
+  var res=db.resources.filter(function(r){return r.category===cat;})[0];
+  if(res)res.stock=Math.max(0,res.stock-qty);
+  save();toast(t('toast.distRecorded'));render();
+};
+F.alert=function(f,d){
+  var tEn=String(d.get('titleEn')||'').trim(),bEn=String(d.get('bodyEn')||'').trim(),area=String(d.get('area')||'').trim();
+  if(!tEn||!bEn||!area){toast(t('errMissing'),'warn');return;}
+  var tTa=String(d.get('titleTa')||'').trim(),bTa=String(d.get('bodyTa')||'').trim();
+  db.alerts.unshift({id:uid('a_'),level:d.get('level'),titleEn:tEn,titleTa:tTa||tEn,bodyEn:bEn,bodyTa:bTa||bEn,areaEn:area,areaTa:area,issuedAt:iso()});
+  save();toast(t('toast.published'));render();
+};
+F['shelter-update']=function(f,d){
+  var s=db.shelters.filter(function(x){return x.id===f.dataset.id;})[0];if(!s)return;
+  s.occupied=Math.max(0,parseInt(d.get('occupied'),10)||0);
+  s.status=d.get('status')==='closed'?'closed':'open';
+  save();toast(t('toast.updated'));render();
+};
+F['shelter-add']=function(f,d){
+  var name=String(d.get('name')||'').trim(),area=String(d.get('area')||'').trim();
+  if(!name||!area){toast(t('errMissing'),'warn');return;}
+  db.shelters.push({id:uid('s_'),nameEn:name,nameTa:String(d.get('nameTa')||'').trim()||name,areaEn:area,areaTa:area,capacity:Math.max(1,parseInt(d.get('capacity'),10)||1),occupied:0,facilities:d.getAll('facilities'),contact:String(d.get('contact')||'').trim(),status:'open'});
+  save();toast(t('toast.added'));render();
+};
+F['res-update']=function(f,d){
+  var r=db.resources.filter(function(x){return x.id===f.dataset.id;})[0];if(!r)return;
+  r.total=Math.max(1,parseInt(d.get('total'),10)||1);
+  r.stock=Math.min(r.total,Math.max(0,parseInt(d.get('stock'),10)||0));
+  save();toast(t('toast.updated'));render();
+};
+F['res-add']=function(f,d){
+  var name=String(d.get('name')||'').trim(),unit=String(d.get('unit')||'').trim(),lo=String(d.get('location')||'').trim();
+  if(!name||!unit||!lo){toast(t('errMissing'),'warn');return;}
+  var total=Math.max(1,parseInt(d.get('total'),10)||1);
+  db.resources.push({id:uid('r_'),category:d.get('category'),nameEn:name,nameTa:String(d.get('nameTa')||'').trim()||name,unitEn:unit,unitTa:unit,stock:Math.min(total,Math.max(0,parseInt(d.get('stock'),10)||0)),total:total,locationEn:lo,locationTa:lo});
+  save();toast(t('toast.added'));render();
+};
+
+document.addEventListener('submit',function(e){
+  var f=e.target.closest('form[data-form]');if(!f)return;
+  e.preventDefault();
+  if(f.checkValidity&&!f.checkValidity()){f.reportValidity();return;}
+  var h=F[f.dataset.form];if(h)h(f,new FormData(f));
+});
+
+/* ---------- photo compression, simulation toggle, filter & inputs ---------- */
+document.addEventListener('change',function(e){
+  var el=e.target;
+  if(el.id==='photo-input'&&el.files&&el.files[0]){
+    var file=el.files[0];
+    if(file.size>10*1024*1024){toast('Image file too large (>10MB)','warn');return;}
+    var fr=new FileReader();
+    fr.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        // Compress to max 480px width/height and 0.55 quality to prevent exceeding browser localStorage limit
+        var maxDim=480;
+        var s=Math.min(1,maxDim/Math.max(img.width,img.height));
+        var c=document.createElement('canvas');
+        c.width=Math.max(1,Math.round(img.width*s));
+        c.height=Math.max(1,Math.round(img.height*s));
+        var ctx=c.getContext('2d');
+        ctx.drawImage(img,0,0,c.width,c.height);
+        ui.photo=c.toDataURL('image/jpeg',0.55);
+        var pv=$('#photo-prev');
+        var wrap=$('#photo-prev-wrap');
+        if(pv&&wrap){pv.src=ui.photo;wrap.style.display='block';}
+      };
+      img.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+    return;
+  }
+  var ch=el.dataset&&el.dataset.change;
+  if(ch==='sim'){
+    ui.sim=el.checked;
+    toast(ui.sim?t('toast.nowOffline'):t('toast.nowOnline'),ui.sim?'warn':'');
+    if(!ui.sim)syncOffline(true);
+    render();
+    return;
+  }
+  if(ch==='assign'){
+    var q=reqById(el.dataset.id),v=db.users.filter(function(x){return x.id===el.value;})[0];
+    if(!q)return;
+    if(v){
+      q.assignedTo=v.id;q.assignedName=v.name;
+      logUpdate(q,{type:'assign',name:v.name});
+      notify(v.id,'n.assignedYou',{cat:q.category,loc:q.location});
+      if(q.status==='Pending')setStatus(q,'Acknowledged',me().name);
+    } else {
+      q.assignedTo=null;q.assignedName=null;q.updatedAt=iso();
+    }
+    save();toast(t('toast.assigned'));render();return;
+  }
+  if(ch==='req-status'){
+    var q2=reqById(el.dataset.id);if(!q2)return;
+    setStatus(q2,el.value,me().name);save();toast(t('toast.updated'));render();return;
+  }
+  if(el.dataset&&el.dataset.filter){
+    var k=el.dataset.filter;
+    ui.f[k]=el.type==='checkbox'?el.checked:el.value;
+    var l=$('#vol-list');if(l)l.innerHTML=taskListHtml(me());
+  }
+});
+
+document.addEventListener('input',function(e){
+  var el=e.target;
+  if(el.id==='shelter-search'){
+    ui.shelterQ=el.value;
+    var listEl=$('#shelter-list');
+    if(listEl)listEl.innerHTML=shelterListHtml(ui.shelterQ);
+    return;
+  }
+  if(el.dataset&&el.dataset.filter==='loc'){
+    ui.f.loc=el.value;
+    var l=$('#vol-list');if(l)l.innerHTML=taskListHtml(me());
+    return;
+  }
+  if(el.dataset&&el.dataset.range){
+    var o=$('#'+el.dataset.range);if(o)o.textContent=el.value;
+  }
+});
+
+window.addEventListener('online',function(){if(!ui.sim){toast(t('toast.nowOnline'));syncOffline(true);render();}});
+window.addEventListener('offline',function(){toast(t('toast.nowOffline'),'warn');render();});
+$('#dlg').addEventListener('click',function(e){if(e.target===this)closeDlg();});
+
+render();
+})();
+</script>
+</body>
+</html>

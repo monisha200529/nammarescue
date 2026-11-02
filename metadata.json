@@ -1,0 +1,6 @@
+{
+  "name": "NammaRescue",
+  "description": "NammaRescue - Community Disaster Management Platform with bilingual English & Tamil support, incident reporting, volunteer task dispatch, offline sync, and shelter tracking.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
